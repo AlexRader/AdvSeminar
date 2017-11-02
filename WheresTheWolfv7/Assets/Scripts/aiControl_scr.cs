@@ -12,6 +12,8 @@ public class aiControl_scr : MonoBehaviour {
 
 	public GameObject[] homeArea;
 	public GameObject[] patrolArea;
+
+	public GameObject[] constantSpawns;
 	//private List<int> maxCapacity;
 	//private List<List<GameObject>> locations;
 
@@ -59,10 +61,6 @@ public class aiControl_scr : MonoBehaviour {
 	{
 		dayState = (DayState)Random.Range (0, 5);
 		typeDay = (TypeDay)Random.Range (0, 4);
-		//maxCapacity = new List<int> ();
-		//locations = new List<List<GameObject>> ();
-//		Debug.Log(dayState);
-//		Debug.Log(typeDay);
 
 		switch (dayState) 
 		{
@@ -128,8 +126,6 @@ public class aiControl_scr : MonoBehaviour {
 				areaOfSpawn (i);
 			}
 		}
-		
-
 	}
 
 	void areaOfSpawn (int var)
@@ -138,31 +134,18 @@ public class aiControl_scr : MonoBehaviour {
 		{
 		case 0:
 			spawnPos = firstMarket [Random.Range (0, (firstMarket.Length))].transform.position;
-			newObj = Instantiate (mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage ("setConfined", true);
-			//newObj.SendMessage ("setMyObject", this.gameObject);
+			spawnSettings();
 			newObj.SendMessage("setArea", firstMarket);
-
-			newObj.name = "AI" + theCount;
-			//GameObject.Find (newObj.name).SendMessage ("setValues", var);
 			break;
 		case 1:
 			spawnPos = secondMarket [Random.Range (0, (secondMarket.Length))].transform.position;
-			newObj = Instantiate (mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage ("setConfined", true);
-			//newObj.SendMessage ("setMyObject", this.gameObject);
+			spawnSettings();
 			newObj.SendMessage("setArea", secondMarket);
-
-			newObj.name = "AI" + theCount;
 			break;
 		case 2:
 			spawnPos = homeArea[Random.Range(0, (homeArea.Length))].transform.position;
-			newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage("setConfined", true);
-			//newObj.SendMessage("setMyObject", this.gameObject);
+			spawnSettings();
 			newObj.SendMessage("setArea", homeArea);
-
-			newObj.name = "AI" + theCount;
 			break;
 		case 3:
 			int location = Random.Range(0, (patrolArea.Length));
@@ -173,77 +156,29 @@ public class aiControl_scr : MonoBehaviour {
 			//newObj.SendMessage("setMyObject", this.gameObject);
 			newObj.SendMessage("setArea", patrolArea);
 
-
 			newObj.name = "AI" + theCount;
+			newObj.SendMessage("setMovement", "staticMove");
 			break;
-
+		case 4:
+			break;
 		}
 	}
-	/*
-	Vector2 getListPosition(int var)
-	{
-		
-	}
-*/
+
 	void setLists()
 	{
-		//if (firstMarket == null) 
-		//{			
-			//firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
-			//setArray("firstMarket");
-			//for (int i = 0; i < findObjects.Length; ++i) 
-			//{
 		firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
 		secondMarket = GameObject.FindGameObjectsWithTag ("secondMarket");
 		homeArea = GameObject.FindGameObjectsWithTag("homeLocation");
 		patrolArea = GameObject.FindGameObjectsWithTag("walkPath");
-	//		Debug.Log (firstMarket.Length);
-	//GameObject.Find ("npc_prefab").SendMessage ("moveTo");
-	//}
-	//addFactors(firstMarket);
-
-		//}
-
+		constantSpawns = GameObject.FindGameObjectsWithTag("constantSpawns");
 
 	}
 
-	// no longer used
-	/*
-	void returnNextMove(GameObject sentObj)
+	void spawnSettings()
 	{
-		
-		switch (sentObj.GetComponent<aiMovement_scr>().confinedTo)
-		{
-		case 0:
-			returnVec = firstMarket [Random.Range (0, (firstMarket.Length))].transform.position;
-			break;
-		case 1:
-			returnVec = secondMarket [Random.Range (0, (secondMarket.Length))].transform.position;
-			break;
-		case 2:
-			returnVec = homeArea[Random.Range(0, (homeArea.Length))].transform.position;
-			break;
-		}
-		sentObj.SendMessage ("setEndPos", returnVec);
-	}*/
-	/*
-	void addFactors(List<GameObject> var)
-	{
-		//locations [numLists] = var;
-		locations [numLists] = var;
+		newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
+		newObj.SendMessage("setConfined", true);
+		newObj.name = "AI" + theCount;
+		newObj.SendMessage("setMovement", "normal");
 	}
-*/
-	/*
-	void setArray(string var)
-	{
-		if (findObjects != null)
-			Array.Clear (findObjects, 0, findObjects.Length);
-		findObjects = GameObject.FindGameObjectsWithTag (var);
-	}*/
-	/*
-	Vector3 returnListLocation(int var, int var2)
-	{
-		locations
-	}
-*/
 }
