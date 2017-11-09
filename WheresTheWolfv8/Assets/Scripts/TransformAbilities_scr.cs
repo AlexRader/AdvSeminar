@@ -28,7 +28,10 @@ public class TransformAbilities_scr : MonoBehaviour
 
 	private Component test;
 
-	private bool changeBack = false;
+	private bool changeBack = true;
+
+	private GameObject playerRef;
+	private GameObject cameraRef;
 
 	public enum DashState 
 	{
@@ -47,14 +50,16 @@ public class TransformAbilities_scr : MonoBehaviour
 		switch (biteState) 
 		{
 		case BiteState.Ready:
-			var isBiteKeyDown = Input.GetKey (KeyCode.C);
+			var isBiteKeyDown = Input.GetKey (KeyCode.J);
 			if (isBiteKeyDown) 
 			{
 				savedVelocity = rb.velocity;
 				attack = true;
 				rb.velocity = Vector2.zero;
 				biteState = BiteState.Biting;
-				GameObject.FindGameObjectWithTag ("Player").SendMessage ("disableInput");
+				playerRef.SendMessage ("disableInput");
+				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
+				cameraRef.SendMessage("shakingRoutine", false);
 			}
 			break;
 		case BiteState.Biting:
@@ -64,7 +69,9 @@ public class TransformAbilities_scr : MonoBehaviour
 				attack = false;
 				biteTimer = maxBite;
 				rb.velocity = savedVelocity;
-				GameObject.FindGameObjectWithTag ("Player").SendMessage ("disableInput");
+				playerRef.SendMessage ("disableInput");
+				cameraRef.SendMessage("shakingRoutine", false);
+				gameObject.GetComponent<CircleCollider2D>().radius = 3f;
 				biteState = BiteState.Ready;
 			}
 			break;
@@ -76,14 +83,16 @@ public class TransformAbilities_scr : MonoBehaviour
 		switch (dashState) 
 		{
 		case DashState.Ready:
-			var isDashKeyDown = Input.GetKey (KeyCode.V);
+			var isDashKeyDown = Input.GetKey (KeyCode.K);
 			if(isDashKeyDown)
 			{
 				savedVelocity = rb.velocity;
 				attack = true;
 				rb.velocity =  new Vector2(rb.velocity.x * 3f, rb.velocity.y * 3f);
 				dashState = DashState.Dashing;
-				GameObject.FindGameObjectWithTag ("Player").SendMessage("disableInput");
+				playerRef.SendMessage("disableInput");
+				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
+				cameraRef.SendMessage("shakingRoutine", true);
 			}
 			break;
 		case DashState.Dashing:
@@ -94,9 +103,11 @@ public class TransformAbilities_scr : MonoBehaviour
 				dashTimer = cooldownTimer;
 				rb.velocity = savedVelocity;
 				dashState = DashState.Cooldown;
-				GameObject.FindGameObjectWithTag ("Player").SendMessage("disableInput");
+				playerRef.SendMessage("disableInput");
+				cameraRef.SendMessage("shakingRoutine", true);
+				gameObject.GetComponent<CircleCollider2D>().radius = 3f;	
 			}
-			break;
+				break;
 		case DashState.Cooldown:
 			dashTimer -= Time.deltaTime;
 			if(dashTimer <= 0)
@@ -112,9 +123,12 @@ public class TransformAbilities_scr : MonoBehaviour
 	void Start () 
 	{
 		werewolfForm = false;
+		changeForm();
 		dashTimer = maxDash;
 		rb = GetComponent<Rigidbody2D> ();
 		test = GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>();
+		playerRef = GameObject.FindGameObjectWithTag("Player");
+		cameraRef = GameObject.FindGameObjectWithTag("MainCamera");
 	}
 	
 	// Update is called once per frame
@@ -124,20 +138,16 @@ public class TransformAbilities_scr : MonoBehaviour
 		{ 
 			Dashing ();
 			Biting ();
-			newInputs();
 		}
+		newInputs();
 	}
 
 	void newInputs()
 	{
-		if (Input.GetKey (KeyCode.R) && changeBack == true)
+		if (Input.GetKeyDown (KeyCode.L) && changeBack == true)
 		{
-			Debug.Log("here now");
-
 			changeForm();
-			allowChange(false);
-			this.GetComponent<Timer_scr>().SendMessage("reset");
-			//this.SendMessage("reset");
+			allowChange(true);
 		}
 	}
 
@@ -150,14 +160,18 @@ public class TransformAbilities_scr : MonoBehaviour
 	{
 		werewolfForm = !werewolfForm;
 
-		if (werewolfForm == true) 
+		if (werewolfForm == true)
 		{
-			GameObject.FindGameObjectWithTag ("Player").SendMessage("changeMaxVel", 10f);
+			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", 10f);
+			this.GetComponent<Timer_scr>().SendMessage("reset");
 			//Debug.Log("toomuch");
 		}
 		else
-			GameObject.FindGameObjectWithTag ("Player").SendMessage("changeMaxVel", -10f);
-		test.SendMessage("setBool");
+		{
+			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", -10f);
+			this.GetComponent<Timer_scr>().SendMessage("clear");
+		}
+		GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>().SendMessage("setBool");
 		GameObject.FindGameObjectWithTag("Player").SendMessage("changeInteraction", werewolfForm);
 	}
 }

@@ -38,6 +38,21 @@ public class Bar_scr : MonoBehaviour
 
 	}
 
+	private void HandleBarIcrease(Vector2 amounts)
+	{
+		content.fillAmount = Map(amounts.x, amounts.y);
+		if (amounts.x >= amounts.y)
+			this.SendMessage(myName);
+	}
+
+	//rotate the light
+	void percentageFilled(Vector3 inputVec)
+	{
+		float currentRotation = 0;
+		currentRotation = (inputVec.x - inputVec.y) * inputVec.z;
+		transform.root.SendMessage("rotate", currentRotation);
+	}
+
 	//translation for the fill amount
 	private float Map(float val, float inputMax)
 	{

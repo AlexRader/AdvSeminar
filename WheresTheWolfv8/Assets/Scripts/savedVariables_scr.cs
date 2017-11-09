@@ -9,7 +9,7 @@ public class savedVariables_scr : MonoBehaviour {
 	private float startTime;
 
 	public static int score = 0;
-	private bool counting = true;
+	private bool counting = false;
 	Scene scene;
 	public int scoreEnd;
 
@@ -48,7 +48,6 @@ public class savedVariables_scr : MonoBehaviour {
 	void saveCurrentVars()
 	{
 		PlayerPrefs.SetInt("currScore", score);
-		Debug.Log(score);
 	}
 
 	void getCurrentVars()

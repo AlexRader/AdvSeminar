@@ -25,7 +25,6 @@ public class aiMovement_scr : MonoBehaviour
 	private Vector3 velocity;
 
 	private Vector3 distance;
-	private float actualDistance;
 
 	public bool confinedTo;
 	private bool notMoveable;
@@ -48,10 +47,7 @@ public class aiMovement_scr : MonoBehaviour
 	private float attackTime;
 	private bool enemyAI;
 	public Color color;
-	private SpriteRenderer sprite;
 
-	//bool happen = false;
-	// Use this for initialization
 	void Start () 
 	{
 		myRB = GetComponent<Rigidbody2D> ();
@@ -60,18 +56,12 @@ public class aiMovement_scr : MonoBehaviour
 		Physics2D.IgnoreLayerCollision(8, 8, true);
 		Physics2D.IgnoreLayerCollision(8, 0, true);
 		alive = true;
-		//notMoveable = false;
 		modVelocity = (Random.Range(MIN_SPEED_MODIFY, MAX_SPEED_MODIFY)) / 20.0f;
-		//Debug.Log("current max speed");
-		//Debug.Log(maxSpeed);
+
 		maxSpeed = maxSpeed + modVelocity + modVelocity + modVelocity;
 		playerRef = GameObject.FindGameObjectWithTag("Player");
 		test = GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>();
 		attackTime = MAXTIME;
-
-		//Debug.Log("new max speed");
-		//Debug.Log(maxSpeed);
-		//moveTo ();
 	}
 	
 	// Update is called once per frame
@@ -99,25 +89,8 @@ public class aiMovement_scr : MonoBehaviour
 		}
 	}
 
-	/*
-	else
-	{
-		//this else will be using a switch for ww within a radius an flee from it
-		mLinear = mpMover->getPosition() - mpTarget->getPosition();
-	}*/
 	void moveTo()
 	{
-		/*
-			x = GameObject.Find ("aiControl").GetComponent<aiControl_scr> ().firstMarket.Length;
-			//Debug.Log (x);
-			//x -= 1;
-			calc = Random.Range (0, x);
-//			Debug.Log (calc);
-		//	Debug.Log ("here");
-		myObject = GameObject.Find ("aiControl").GetComponent<aiControl_scr> ().firstMarket [calc];
-		endPos = myObject.transform.position;*/
-		//myObject.SendMessage ("returnNextMove", this.gameObject);
-		//endPos = 
 		getNextLocation();
 	}
 
@@ -140,7 +113,6 @@ public class aiMovement_scr : MonoBehaviour
 		//velocity /= inc;
 		myRB.velocity = Vector3.zero;
 			myRB.velocity = velocity;
-		//velocity *= Time.deltaTime;
 	}
 
 	void runningScript()
@@ -167,11 +139,11 @@ public class aiMovement_scr : MonoBehaviour
 		{
 			position = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
 			distance = position.magnitude;
-			if (distance < 5.0f)
+			if (distance <= 9.0f)
 			{
 				attacking = true;
 			}
-			if (distance > 5.0f && attacking == false )
+			if (distance > 9.0f && attacking == false )
 			{
 				velocity = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
 				velocity = velocity.normalized * maxSpeed;
@@ -191,12 +163,11 @@ public class aiMovement_scr : MonoBehaviour
 			if(hit.collider.gameObject.tag.Equals("building")) 
 			{
 					// Add direction from hit face, times how much force to repel by
-
 					temp = positionPoint;
 					tempStore = temp.x;
 					temp.x = temp.y * -1.0f;
 					temp.y = tempStore;
-					velocity += temp * 5f;
+					velocity += temp * 2f;
 					velocity = velocity.normalized * maxSpeed;
 			}
 		}
@@ -205,7 +176,6 @@ public class aiMovement_scr : MonoBehaviour
 	void death()
 	{
 		test.SendMessage("modScore", 100);
-		Debug.Log("here");
 		playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
 		Destroy (this.gameObject);
 	}
@@ -213,19 +183,10 @@ public class aiMovement_scr : MonoBehaviour
 
 	void OnTriggerStay2D(Collider2D coll)
 	{
-		if (coll.tag == "Player")
+		if (coll.tag == "Player" && coll.GetComponent<TransformAbilities_scr>().attack == true) 
 		{
-			//Debug.Log("hitting");
-			distance = coll.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
-			actualDistance = distance.magnitude;
-			//Physics2D.IgnoreLayerCollision(8, 9, false);
-		}
-		if (coll.tag == "Player" && coll.GetComponent<TransformAbilities_scr>().attack == true && actualDistance <= 1.0f) 
-		{
-			//Debug.Log ("collided");
 			myRB.velocity = coll.GetComponent<movement_scr> ().returnVelocity;
 			alive = false;
-			//death ();
 		}
 	}
 
@@ -277,6 +238,10 @@ public class aiMovement_scr : MonoBehaviour
 		{
 			run = true;
 			Physics2D.IgnoreLayerCollision(8, 10, false);
+			if (enemyAI)
+			{
+				maxSpeed = 10;
+			}
 		}
 	}
 

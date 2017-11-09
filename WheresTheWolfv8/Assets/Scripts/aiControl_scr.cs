@@ -220,8 +220,7 @@ public class aiControl_scr : MonoBehaviour {
 		//patrolArea = GameObject.FindGameObjectsWithTag ("walkPath");
 		numberOfItems = GameObject.FindGameObjectsWithTag ("walkPath").Length;
 		patrolArea = GameObject.FindGameObjectsWithTag ("walkPath");
-		Debug.Log (numberOfItems);
-		for (int i = 0; i < 12; i++) 
+		for (int i = 0; i < numberOfItems; i++) 
 		{
 			patrolArea [i] = GameObject.Find ("walkPath_prefab" + i);
 		}

@@ -2,39 +2,44 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class endLvl_scr : MonoBehaviour {
+public class endLvl_scr : MonoBehaviour
+{
 
 	private bool check = false;
 	private float curAmount;
 	private float maxAmount;
 	private Vector2 vecAmount;
+	private Vector3 currentPercentage;
 	// Use this for initialization
-	void Start () 
+	void Start()
 	{
-		maxAmount = 25;
+		maxAmount = 30;
 		curAmount = maxAmount;
 		vecAmount = new Vector2(curAmount, maxAmount);
+		currentPercentage = new Vector3(maxAmount, vecAmount.x, 180.0f / maxAmount);
 	}
 
 	// Update is called once per frame
-	void Update () 
+	void Update()
 	{
 
 	}
 	//each timer has it's unique increment in time
 	void incTime(float dt)
 	{
-		if (check != true) 
+		if (check != true)
 		{
 			vecAmount.x -= dt;
-			this.SendMessage ("HandleBar", vecAmount);
+			currentPercentage.y = vecAmount.x;
+			this.SendMessage("percentageFilled", currentPercentage);
+			this.SendMessage("HandleBar", vecAmount);
 		}
 
 	}
 
 	void levelEnd()
 	{
-//		Debug.Log("working");
+		//		Debug.Log("working");
 		GameObject.Find("ControlObject").SendMessage("levelChange");
 	}
 }

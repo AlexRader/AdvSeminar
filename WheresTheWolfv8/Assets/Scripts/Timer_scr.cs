@@ -16,7 +16,6 @@ public class Timer_scr : MonoBehaviour
 		curTime = MAXTIME;
 		if (timers == null) 
 			timers = GameObject.FindGameObjectsWithTag("timer");
-//		Debug.Log (timers.Length);
 	}
 	
 	// Update is called once per frame
@@ -39,11 +38,21 @@ public class Timer_scr : MonoBehaviour
 
 	void reset()
 	{
-		Debug.Log("happened");
+		if (timers != null)
+		{
+			for (int i = 0; i < timers.Length; ++i)
+			{
+				if (timers[i].name != "health" && timers[i].name != "levelEnd")
+					timers[i].SendMessage("resetMe");
+			}
+		}
+	}
+	void clear()
+	{
 		for (int i = 0; i < timers.Length; ++i)
 		{
-			if (timers[i].name != "health" || timers[i].name != "levelEnd")
-				timers [i].SendMessage ("resetMe");
+			if (timers[i].name != "health" && timers[i].name != "levelEnd")
+				timers[i].SendMessage("clearMe");
 		}
 	}
 

@@ -7,16 +7,20 @@ public class arrow_scr : MonoBehaviour {
 	private GameObject playerRef;
 	private Rigidbody2D myRB;
 	private Vector3 velocity;
-	private float maxSpeed = 5.0f;
+	private float maxSpeed = 25.0f;
 	// Use this for initialization
 	void Start () 
 	{
 		Physics2D.IgnoreLayerCollision(8, 10, true);
 		myRB = GetComponent<Rigidbody2D> ();
 		playerRef = GameObject.FindGameObjectWithTag("Player");
-		//Vector3 relativePosition = playerRef.transform.position - this.transform.position;
-		//Quaternion rotation = Quaternion.LookRotation(relativePosition);
-		//transform.rotation = rotation;
+
+		Vector3 relativePosition = (playerRef.transform.position - this.transform.position);
+		relativePosition.Normalize();
+
+		float rotZ = Mathf.Atan2(relativePosition.y, relativePosition.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(0.0f, 0.0f, rotZ - 90.0f);
+
 		velocity = playerRef.transform.position - this.transform.position;
 		myRB.velocity = velocity.normalized;
 		myRB.velocity *= maxSpeed;

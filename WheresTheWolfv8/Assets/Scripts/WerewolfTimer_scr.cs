@@ -34,7 +34,18 @@ public class WerewolfTimer_scr : MonoBehaviour
 			vecAmount.x -= dt;
 			this.SendMessage ("HandleBar", vecAmount);
 		}
+		else
+		{
+			addTo(dt);
+		}
 	}
+
+	void addTo(float dt)
+	{
+		vecAmount.x += dt;
+		this.SendMessage("HandleBarIcrease", vecAmount);
+	}
+
 
 	void modSpeedMultiply(float var)
 	{
@@ -57,10 +68,17 @@ public class WerewolfTimer_scr : MonoBehaviour
 		
 	void resetMe ()
 	{
-		Debug.Log("here now bitch");
 		curAmount = maxAmount;
 		vecAmount = new Vector2(curAmount, maxAmount);
 		this.SendMessage ("reset", vecAmount);
 		check = false;
+	}
+
+	void clearMe()
+	{
+		curAmount = 0.0f;
+		vecAmount = new Vector2(curAmount, maxAmount);
+		this.SendMessage("reset", vecAmount);
+		check = true;
 	}
 }

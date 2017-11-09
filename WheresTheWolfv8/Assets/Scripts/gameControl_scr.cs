@@ -5,18 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class gameControl_scr : MonoBehaviour 
 {
-
 	Scene scene;
 	// Use this for initialization
 	void Start () {
 		scene = SceneManager.GetActiveScene();
-//		Debug.Log(scene.name);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	void levelChange ()
 	{
@@ -35,7 +29,6 @@ public class gameControl_scr : MonoBehaviour
 		else
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 	}
-
 
 
 }

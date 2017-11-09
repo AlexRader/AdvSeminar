@@ -1,9 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class cameraFollow_scr : MonoBehaviour {
+public class cameraFollow_scr : MonoBehaviour
+{
 
+	//the following is for the follow camera function
 	private Vector2 velocity;
 	public float smoothTimeX;
 	public float smoothTimeY;
@@ -12,10 +13,16 @@ public class cameraFollow_scr : MonoBehaviour {
 
 	private GameObject player;
 
+	//camera shake function vars
+	private bool shaking = false;
+	private bool typeShake = false;
+	private float shakeAmount;
+
 	// Use this for initialization
-	void Start () 
+	void Start()
 	{
-		player = GameObject.FindGameObjectWithTag ("Player");
+		player = GameObject.FindGameObjectWithTag("Player");
+		shakeAmount = 15f;
 	}
 
 	void FixedUpdate()
@@ -24,6 +31,32 @@ public class cameraFollow_scr : MonoBehaviour {
 		posY = Mathf.SmoothDamp(transform.position.y, player.transform.position.y, ref velocity.y, smoothTimeY);
 		transform.position = new Vector3(posX, posY, transform.position.z);
 	}
+
+	private void Update()
+	{
+		if (shaking)
+		{
+			Vector3 newPos = transform.position + Random.insideUnitSphere * (Time.deltaTime * shakeAmount);
+			if (typeShake == false)
+				newPos.y = transform.position.y;
+			newPos.z = transform.position.z;
+
+			transform.position = newPos;
+		}
+	}
+
+	public void shakingRoutine(bool type)
+	{
+		shaking = !shaking;
+		typeShake = type;
+	}
+
+
+
+
+
+
+
 
 
 }
