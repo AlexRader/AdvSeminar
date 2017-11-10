@@ -50,7 +50,7 @@ public class TransformAbilities_scr : MonoBehaviour
 		switch (biteState) 
 		{
 		case BiteState.Ready:
-			var isBiteKeyDown = Input.GetKey (KeyCode.J);
+			var isBiteKeyDown = Input.GetKeyDown (KeyCode.J);
 			if (isBiteKeyDown) 
 			{
 				savedVelocity = rb.velocity;
@@ -83,7 +83,7 @@ public class TransformAbilities_scr : MonoBehaviour
 		switch (dashState) 
 		{
 		case DashState.Ready:
-			var isDashKeyDown = Input.GetKey (KeyCode.K);
+			var isDashKeyDown = Input.GetKeyDown (KeyCode.K);
 			if(isDashKeyDown)
 			{
 				savedVelocity = rb.velocity;
@@ -170,6 +170,10 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
 			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", -10f);
 			this.GetComponent<Timer_scr>().SendMessage("clear");
+			biteTimer = 0;
+			dashTimer = 0;
+			Dashing();
+			Biting();
 		}
 		GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>().SendMessage("setBool");
 		GameObject.FindGameObjectWithTag("Player").SendMessage("changeInteraction", werewolfForm);

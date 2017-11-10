@@ -27,15 +27,15 @@ public class savedVariables_scr : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if (counting == true)
+		if (counting == true && scene.name != "StartScreen")
 		{
 			startTime -= Time.deltaTime;
 			if (startTime <= 0)
 			{
 				startTime = MAX_TIME;
 				modScore(1);
+				GameObject.FindGameObjectWithTag("Player").SendMessage("changeScore", score);
 			}
-			GameObject.FindGameObjectWithTag("Player").SendMessage("changeScore", score);
 		}
 		//Debug.Log(score);
 	}

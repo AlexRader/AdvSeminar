@@ -35,8 +35,10 @@ public class aiMovement_scr : MonoBehaviour
 	private int myLocation = 0;
 
 	private bool run = false;
+	private bool returnNow = false;
 	RaycastHit2D hit;
 	int layermask = 1 << 10;
+	int layerMaskTwo = 1 << 9;
 
 	private GameObject playerRef;
 
@@ -96,16 +98,25 @@ public class aiMovement_scr : MonoBehaviour
 
 	void move()
 	{
-		if (run == false && notMoveable == false) {
-			if (this.transform.position.x - endPos.x < 1f && this.transform.position.x - endPos.x > -1f) {
-				if (this.transform.position.y - endPos.y < 1f && this.transform.position.y - endPos.y > -1f) {
-					moveTo ();
+		if (run == false && notMoveable == false)
+		{
+			if (this.transform.position.x - endPos.x < 1f && this.transform.position.x - endPos.x > -1f)
+			{
+				if (this.transform.position.y - endPos.y < 1f && this.transform.position.y - endPos.y > -1f)
+				{
+					moveTo();
 					velocity = endPos - this.transform.position;
 				}
 			}
-		} else if (run == false && notMoveable == true) {
+		}
+		else if (run == false && notMoveable == true && returnNow == false)
+		{
 			//here is where i would do their special thing i.e. interactions
 		}
+		//else if (run == false && returnNow == true)
+		//{
+
+		//}
 		else
 			runningScript ();
 			//velocity = this.transform.position - GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().transform.position;
@@ -119,6 +130,8 @@ public class aiMovement_scr : MonoBehaviour
 	{
 		Vector3 temp;
 		Vector2 positionPoint = Vector2.zero;
+		Vector2 playerDirection = Vector2.zero;
+
 		Vector2 position;
 		float distance;
 		bool attacking = false;
@@ -128,7 +141,10 @@ public class aiMovement_scr : MonoBehaviour
 
 		positionPoint = this.myRB.velocity;
 
+		playerDirection = playerRef.transform.position - transform.position;
+
 		curTime -= Time.deltaTime;
+
 		if (curTime <= 0 && enemyAI == false)
 		{
 			velocity = this.transform.position - playerRef.GetComponent<Rigidbody2D>().transform.position;
@@ -156,9 +172,25 @@ public class aiMovement_scr : MonoBehaviour
 			}
 		}
 
+		Debug.DrawRay(this.transform.position, playerDirection, Color.red);
+		hit = Physics2D.Raycast(this.transform.position, playerDirection, playerDirection.normalized.magnitude, layerMaskTwo);
+
+		if (hit.collider != null)
+		{
+			if (hit.collider.gameObject.tag.Equals("Player"))
+			{
+				if (playerRef.GetComponent<playerInteract_scr>().isActive == false)
+				{
+					returnNow = true;
+					run = false;
+				}
+			}
+		}
+		//rayCastDetection(playerDirection, hit);
+
 		Debug.DrawRay(this.transform.position, positionPoint, Color.blue);
 		hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude, layermask);
-		if(hit.collider != null)
+		if (hit.collider != null)
 		{
 			if(hit.collider.gameObject.tag.Equals("building")) 
 			{
@@ -172,6 +204,28 @@ public class aiMovement_scr : MonoBehaviour
 			}
 		}
 	}
+
+	void rayCastDetection(Vector3 posNormalized, RaycastHit2D validTarget)
+	{
+		Debug.Log("here");
+		Vector3 temp;
+		float tempStore;
+		if (validTarget.collider != null)
+		{
+			//if (validTarget.collider.gameObject.tag.Equals("building"))
+			//{
+				// Add direction from hit face, times how much force to repel by
+			//	temp = posNormalized;
+			//	tempStore = temp.x;
+			//	temp.x = temp.y * -1.0f;
+			//	temp.y = tempStore;
+			//	velocity += temp * 2f;
+			//	velocity = velocity.normalized * maxSpeed;
+			//}
+
+		}
+	}
+
 
 	void death()
 	{
@@ -237,6 +291,7 @@ public class aiMovement_scr : MonoBehaviour
 		if (run != true)
 		{
 			run = true;
+			returnNow = false;
 			Physics2D.IgnoreLayerCollision(8, 10, false);
 			if (enemyAI)
 			{

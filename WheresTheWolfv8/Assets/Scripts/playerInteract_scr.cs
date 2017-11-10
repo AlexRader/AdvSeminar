@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class playerInteract_scr : MonoBehaviour {
 
-	private bool isActive;
+	public bool isActive;
 	//public bool spotted = false;
 	public bool anotherSpotted = false;
 	Vector3 var1, var2;
