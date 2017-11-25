@@ -28,7 +28,7 @@ public class movement_scr : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (dash == false) {playerInput ();}
+        playerInput ();
 		returnVelocity = myRB.velocity;
 
 	}
@@ -45,25 +45,31 @@ public class movement_scr : MonoBehaviour
 		float axisX = Input.GetAxis ("Horizontal");
 		float axisY = Input.GetAxis ("Vertical");
 
-		moveInput = new Vector3 (axisX, axisY);
-		moveVelocity = moveInput * curVel;
-		//transform.Translate (new Vector3 (axisX, axisY) * Time.deltaTime * curVel);
+        if (dash == false)
+        {
+            moveInput = new Vector3 (axisX, axisY);
+		    moveVelocity = moveInput * curVel;
+            //transform.Translate (new Vector3 (axisX, axisY) * Time.deltaTime * curVel);
 
-		if (Input.GetKey (KeyCode.W)) 
-			ModVelocity ();
-		if (Input.GetKey (KeyCode.S)) 
-			ModVelocity ();
-		if (Input.GetKey (KeyCode.A)) 
-			ModVelocity ();
-		if (Input.GetKey (KeyCode.D)) 
-			ModVelocity ();
+            if (Input.GetKey(KeyCode.W))
+                ModVelocity();
+            if (Input.GetKey(KeyCode.S))
+                ModVelocity();
+            if (Input.GetKey(KeyCode.A))
+                ModVelocity();
+            if (Input.GetKey(KeyCode.D))
+                ModVelocity();
 
-		myRB.velocity = moveVelocity;
-		if (myRB.velocity.magnitude > MAX_VELOCITY) 
-		{
-			myRB.velocity = myRB.velocity.normalized * MAX_VELOCITY;
-		}
-	}
+
+            myRB.velocity = moveVelocity;
+            if (myRB.velocity.magnitude > MAX_VELOCITY)
+            {
+                myRB.velocity = myRB.velocity.normalized * MAX_VELOCITY;
+            }
+        }
+
+        SendMessage("werewolfInputs");
+    }
 
 	void changeMaxVel(float var)
 	{

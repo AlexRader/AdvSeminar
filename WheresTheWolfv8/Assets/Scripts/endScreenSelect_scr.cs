@@ -15,7 +15,6 @@ public class endScreenSelect_scr : MonoBehaviour {
 	private GameObject storedVariables;
 	// Use this for initialization
 	void Start () {
-		//menu = GameObject.Find("CanvasLookup").GetComponent<Canvas>();
 		buttons = this.GetComponentsInChildren<Button>();
 		currentButton = 0;
 	}

@@ -25,7 +25,6 @@ public class health_scr : MonoBehaviour {
 
 	void health()
 	{
-		Debug.Log("bing bang boom");
-		GameObject.Find("ControlObject").SendMessage("gameOver");
-	}
+        GameObject.Find("ControlObject").SendMessage("gameOver");
+    }
 }

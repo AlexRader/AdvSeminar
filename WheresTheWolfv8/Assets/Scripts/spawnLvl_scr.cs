@@ -40,5 +40,4 @@ public class spawnLvl_scr : MonoBehaviour
 	{
 		directionalLight.SendMessage("rotate", varInc);
 	}
-
 }

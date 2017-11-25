@@ -93,12 +93,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\sad.cs" />
     <Compile Include="Assets\Scripts\aiControl_scr.cs" />
     <Compile Include="Assets\Scripts\aiMovement_scr.cs" />
+    <Compile Include="Assets\Scripts\animationBehaviors.cs" />
     <Compile Include="Assets\Scripts\arrow_scr.cs" />
     <Compile Include="Assets\Scripts\Bar_scr.cs" />
     <Compile Include="Assets\Scripts\cameraFollow_scr.cs" />
     <Compile Include="Assets\Scripts\displayScore_scr.cs" />
+    <Compile Include="Assets\Scripts\endLevelCleanup\gameOverCutScene.cs" />
     <Compile Include="Assets\Scripts\endLvl_scr.cs" />
     <Compile Include="Assets\Scripts\endScreenSelect_scr.cs" />
     <Compile Include="Assets\Scripts\gameControl_scr.cs" />

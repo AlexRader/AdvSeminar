@@ -15,7 +15,7 @@ public class TransformAbilities_scr : MonoBehaviour
 	public BiteState biteState;
 	private float biteTimer;
 
-	private float maxDash = .1f;
+	private float maxDash = .3f;
 	private float maxBite = 1.0f;
 
 	private float cooldownTimer = 5f;
@@ -57,10 +57,9 @@ public class TransformAbilities_scr : MonoBehaviour
 				attack = true;
 				rb.velocity = Vector2.zero;
 				biteState = BiteState.Biting;
-				playerRef.SendMessage ("disableInput");
-				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
-				cameraRef.SendMessage("shakingRoutine", false);
-			}
+                attackModify(false, 1f);
+                SendMessage("slashingNow", attack);
+               }
 			break;
 		case BiteState.Biting:
 			biteTimer -= Time.deltaTime;
@@ -69,12 +68,11 @@ public class TransformAbilities_scr : MonoBehaviour
 				attack = false;
 				biteTimer = maxBite;
 				rb.velocity = savedVelocity;
-				playerRef.SendMessage ("disableInput");
-				cameraRef.SendMessage("shakingRoutine", false);
-				gameObject.GetComponent<CircleCollider2D>().radius = 3f;
+                attackModify(false, 3f);
 				biteState = BiteState.Ready;
-			}
-			break;
+                SendMessage("slashingNow", attack);
+            }
+            break;
 		}
 	}
 
@@ -90,9 +88,9 @@ public class TransformAbilities_scr : MonoBehaviour
 				attack = true;
 				rb.velocity =  new Vector2(rb.velocity.x * 3f, rb.velocity.y * 3f);
 				dashState = DashState.Dashing;
-				playerRef.SendMessage("disableInput");
-				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
-				cameraRef.SendMessage("shakingRoutine", true);
+                SendMessage("dashingNow", attack);
+                attackModify(true, 1f);
+
 			}
 			break;
 		case DashState.Dashing:
@@ -103,11 +101,10 @@ public class TransformAbilities_scr : MonoBehaviour
 				dashTimer = cooldownTimer;
 				rb.velocity = savedVelocity;
 				dashState = DashState.Cooldown;
-				playerRef.SendMessage("disableInput");
-				cameraRef.SendMessage("shakingRoutine", true);
-				gameObject.GetComponent<CircleCollider2D>().radius = 3f;	
-			}
-				break;
+                attackModify(true, 3f);
+                SendMessage("dashingNow", attack);
+            }
+		    break;
 		case DashState.Cooldown:
 			dashTimer -= Time.deltaTime;
 			if(dashTimer <= 0)
@@ -115,10 +112,18 @@ public class TransformAbilities_scr : MonoBehaviour
 				dashTimer = maxDash;
 				dashState = DashState.Ready;
 				attack = false;
-			}
+            }
 			break;
 		}
 	}
+
+    void attackModify(bool shakeType, float radius)
+    {
+        playerRef.SendMessage("disableInput");
+        cameraRef.SendMessage("shakingRoutine", shakeType);
+        gameObject.GetComponent<CircleCollider2D>().radius = radius;
+    }
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -134,13 +139,18 @@ public class TransformAbilities_scr : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (werewolfForm == true) 
-		{ 
-			Dashing ();
-			Biting ();
-		}
-		newInputs();
+
 	}
+
+    void werewolfInputs()
+    {
+        if (werewolfForm == true)
+        {
+            Dashing();
+            Biting();
+        }
+        newInputs();
+    }
 
 	void newInputs()
 	{
