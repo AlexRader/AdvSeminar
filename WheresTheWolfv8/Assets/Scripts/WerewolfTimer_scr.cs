@@ -20,12 +20,6 @@ public class WerewolfTimer_scr : MonoBehaviour
 		vecAmount = new Vector2(curAmount, maxAmount);
 	}
 
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
-
 	// unique timer variable for Werewolf time.
 	void incTime(float dt)
 	{

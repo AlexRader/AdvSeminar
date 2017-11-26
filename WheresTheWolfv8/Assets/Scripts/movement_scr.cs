@@ -49,7 +49,6 @@ public class movement_scr : MonoBehaviour
         {
             moveInput = new Vector3 (axisX, axisY);
 		    moveVelocity = moveInput * curVel;
-            //transform.Translate (new Vector3 (axisX, axisY) * Time.deltaTime * curVel);
 
             if (Input.GetKey(KeyCode.W))
                 ModVelocity();

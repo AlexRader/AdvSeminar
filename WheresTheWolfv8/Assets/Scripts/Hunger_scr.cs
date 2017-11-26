@@ -16,11 +16,6 @@ public class Hunger_scr : MonoBehaviour
 		vecAmount = new Vector2(curAmount, maxAmount);
 	}
 	
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
 	//each timer has it's unique increment in time
 	void incTime(float dt)
 	{

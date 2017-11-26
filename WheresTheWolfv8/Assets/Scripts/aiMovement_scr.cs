@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Animations;
 
 public class aiMovement_scr : MonoBehaviour 
 {
@@ -50,7 +51,9 @@ public class aiMovement_scr : MonoBehaviour
 	private bool enemyAI;
 	public Color color;
 
-	void Start () 
+    private Animator anim;
+
+    void Start () 
 	{
 		myRB = GetComponent<Rigidbody2D> ();
 		endPos = this.transform.position;
@@ -64,14 +67,36 @@ public class aiMovement_scr : MonoBehaviour
 		playerRef = GameObject.FindGameObjectWithTag("Player");
 		test = GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>();
 		attackTime = MAXTIME;
-	}
-	
-	// Update is called once per frame
-	void Update () 
+
+        anim = gameObject.GetComponent<Animator>();
+    }
+
+    void spriteDirection()
+    {
+        if (myRB.velocity.x > 0)
+            gameObject.GetComponent<SpriteRenderer>().flipX = false;
+        else if (myRB.velocity.x < 0)
+            gameObject.GetComponent<SpriteRenderer>().flipX = true;
+    }
+    void animationChecks()
+    {
+        if (myRB.velocity.SqrMagnitude() > .1f)
+        {
+            anim.SetBool("movement", true);
+        }
+        else if (myRB.velocity.SqrMagnitude() <= .1f)
+        {
+            anim.SetBool("movement", false);
+        }
+    }
+    // Update is called once per frame
+    void Update () 
 	{
 		if (alive) 
 		{
 			move ();
+            spriteDirection();
+            animationChecks();
 		}
 		else 
 		{
@@ -253,6 +278,13 @@ public class aiMovement_scr : MonoBehaviour
 	{
 		notMoveable = var;
 	}
+
+    void setAnimator(AnimatorController var)
+    {
+        Animator anim = gameObject.GetComponent<Animator>();
+        anim.runtimeAnimatorController = var;
+    }
+
 
 	// useless function
 	void setMyObject(GameObject var)

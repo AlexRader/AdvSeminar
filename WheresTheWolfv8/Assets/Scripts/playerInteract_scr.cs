@@ -13,15 +13,11 @@ public class playerInteract_scr : MonoBehaviour {
 
 	RaycastHit2D hit;
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
 		isActive = true;
 		Physics2D.IgnoreLayerCollision(9, 8, false);
-		}
-	
-	// Update is called once per frame
-	void Update () {
 	}
-
 
 	void changeInteraction(bool var)
 	{

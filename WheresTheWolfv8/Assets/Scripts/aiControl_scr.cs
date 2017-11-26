@@ -1,24 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Animations;
 //using System;
 
 public class aiControl_scr : MonoBehaviour {
 
-	//private GameObject[] npcControl;
-	//private List<GameObject> aiList;
 	public GameObject[] firstMarket;
 	public GameObject[] secondMarket;
 
 	public GameObject[] homeArea;
 	public GameObject[] patrolArea;
 	public GameObject[] staticPeople;
-	//private List<int> maxCapacity;
-	//private List<List<GameObject>> locations;
 
-	//public GameObject myPrefab;
+    public AnimatorController[] allAnimation;
 
-	public GameObject mySpawn;
+    public GameObject mySpawn;
 
 	private GameObject newObj;
 	private Vector3 spawnPos;
@@ -106,21 +103,18 @@ public class aiControl_scr : MonoBehaviour {
 		for (int i = 0; i < standardSpawns.Length; ++i) 
 		{
 			standardSpawns [i] = Mathf.RoundToInt(standardSpawns [i] * multiplyFactor);
-//			Debug.Log (standardSpawns [i]);
 		}
 		setLists ();
 
-		//aiList = new List<GameObject> ();
-
-
 		spawnUnits ();
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
+
+    void spawnInfo(Vector3 var, bool fooConfined, bool barConfined)
+    {
+        newObj = Instantiate(mySpawn, var, Quaternion.identity);
+        newObj.SendMessage("setConfined", fooConfined);
+        newObj.SendMessage("setMoveable", barConfined);
+    }
 
 	void spawnUnits()
 	{
@@ -136,11 +130,9 @@ public class aiControl_scr : MonoBehaviour {
 		for (int i = 0; i < staticPeople.Length; i++)
 		{
 			spawnPos = staticPeople [i].transform.position;
-			newObj = Instantiate (mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage ("setConfined", true);
-			newObj.SendMessage ("setMoveable", true);
-			//newObj.SendMessage ("setMyObject", this.gameObject);
-			newObj.SendMessage("setArea", staticPeople);
+            spawnInfo(spawnPos, true, true);
+            newObj.SendMessage("setAnimator", allAnimation[0]);
+            newObj.SendMessage("setArea", staticPeople);
 		}
 	}
 
@@ -151,32 +143,22 @@ public class aiControl_scr : MonoBehaviour {
 		{
 		case 0:
 			spawnPos = firstMarket [Random.Range (0, (firstMarket.Length))].transform.position;
-			newObj = Instantiate (mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage ("setConfined", true);
-			newObj.SendMessage ("setMoveable", false);
-			//newObj.SendMessage ("setMyObject", this.gameObject);
+            spawnInfo(spawnPos, true, false);
 			newObj.SendMessage("setArea", firstMarket);
 
 			newObj.name = "AI" + theCount;
-			//GameObject.Find (newObj.name).SendMessage ("setValues", var);
 			break;
 		case 1:
 			spawnPos = secondMarket [Random.Range (0, (secondMarket.Length))].transform.position;
-			newObj = Instantiate (mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage ("setConfined", true);
-			newObj.SendMessage ("setMoveable", false);
-			//newObj.SendMessage ("setMyObject", this.gameObject);
-			newObj.SendMessage("setArea", secondMarket);
+            spawnInfo(spawnPos, true, false);
+            newObj.SendMessage("setArea", secondMarket);
 
 			newObj.name = "AI" + theCount;
 			break;
 		case 2:
 			spawnPos = homeArea[Random.Range(0, (homeArea.Length))].transform.position;
-			newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage("setConfined", true);
-			newObj.SendMessage ("setMoveable", false);
-			//newObj.SendMessage("setMyObject", this.gameObject);
-			newObj.SendMessage("setArea", homeArea);
+            spawnInfo(spawnPos, true, false);
+            newObj.SendMessage("setArea", homeArea);
 
 			newObj.name = "AI" + theCount;
 			break;
@@ -187,33 +169,27 @@ public class aiControl_scr : MonoBehaviour {
 			newObj.SendMessage("currentLocation", location);
 			newObj.SendMessage("setConfined", false);
 			newObj.SendMessage ("setMoveable", false);
-			//newObj.SendMessage("setMyObject", this.gameObject);
-			newObj.SendMessage("setArea", patrolArea);
+            newObj.SendMessage("setArea", patrolArea);
 
 
 			newObj.name = "AI" + theCount;
 			break;
 
 		}
-		if (randomSpawn >= 8)
-			newObj.SendMessage ("switchEnemy", true);
-		else
-			newObj.SendMessage ("switchEnemy", false);
+        if (randomSpawn >= 8)
+        {
+            newObj.SendMessage("switchEnemy", true);
+            newObj.SendMessage("setAnimator", allAnimation[Random.Range(1, 5)]);
+        }
+        else
+        {
+            newObj.SendMessage("switchEnemy", false);
+            newObj.SendMessage("setAnimator", allAnimation[Random.Range(1, 5)]);
+        }
 	}
-	/*
-	Vector2 getListPosition(int var)
-	{
-		
-	}
-*/
+
 	void setLists()
 	{
-		//if (firstMarket == null) 
-		//{			
-			//firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
-			//setArray("firstMarket");
-			//for (int i = 0; i < findObjects.Length; ++i) 
-			//{
 		firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
 		secondMarket = GameObject.FindGameObjectsWithTag ("secondMarket");
 		homeArea = GameObject.FindGameObjectsWithTag("homeLocation");
@@ -225,14 +201,6 @@ public class aiControl_scr : MonoBehaviour {
 			patrolArea [i] = GameObject.Find ("walkPath_prefab" + i);
 		}
 		staticPeople = GameObject.FindGameObjectsWithTag ("notMoving");
-	//		Debug.Log (firstMarket.Length);
-	//GameObject.Find ("npc_prefab").SendMessage ("moveTo");
-	//}
-	//addFactors(firstMarket);
-
-		//}
-
-
 	}
 
 }
