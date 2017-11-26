@@ -179,7 +179,7 @@ public class aiControl_scr : MonoBehaviour {
         if (randomSpawn >= 8)
         {
             newObj.SendMessage("switchEnemy", true);
-            newObj.SendMessage("setAnimator", allAnimation[Random.Range(1, 5)]);
+            newObj.SendMessage("setAnimator", allAnimation[5]);
         }
         else
         {

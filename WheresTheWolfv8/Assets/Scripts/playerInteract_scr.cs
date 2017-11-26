@@ -16,7 +16,8 @@ public class playerInteract_scr : MonoBehaviour {
 	void Start ()
     {
 		isActive = true;
-		Physics2D.IgnoreLayerCollision(9, 8, false);
+        Physics2D.IgnoreLayerCollision(9, 11, true);
+        Physics2D.IgnoreLayerCollision(9, 8, false);
 	}
 
 	void changeInteraction(bool var)

@@ -173,18 +173,19 @@ public class TransformAbilities_scr : MonoBehaviour
 		if (werewolfForm == true)
 		{
 			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", 10f);
-			this.GetComponent<Timer_scr>().SendMessage("reset");
-			//Debug.Log("toomuch");
-		}
+			GetComponent<Timer_scr>().SendMessage("reset");
+            SendMessage("changeVisual", werewolfForm);
+        }
 		else
 		{
 			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", -10f);
-			this.GetComponent<Timer_scr>().SendMessage("clear");
+			GetComponent<Timer_scr>().SendMessage("clear");
 			biteTimer = 0;
 			dashTimer = 0;
 			Dashing();
 			Biting();
-		}
+            SendMessage("changeVisual", werewolfForm);
+        }
 		GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>().SendMessage("setBool");
 		GameObject.FindGameObjectWithTag("Player").SendMessage("changeInteraction", werewolfForm);
 	}

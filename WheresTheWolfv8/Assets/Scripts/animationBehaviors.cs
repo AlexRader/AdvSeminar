@@ -52,4 +52,9 @@ public class animationBehaviors : MonoBehaviour
         anim.SetTrigger("slash");
         anim.SetBool("attacking", isAttacking);
     }
+
+    void changeVisual(bool currentForm)
+    {
+        anim.SetBool("werewolf", currentForm);
+    }
 }
