@@ -12,11 +12,18 @@ public class endScreenSelect_scr : MonoBehaviour {
 	[SerializeField]
 	private Button[] buttons;
 
+	public GameObject selectorItem;
+
 	private GameObject storedVariables;
+
+	Vector3 wolfStart = new Vector3(-4.25f, -.75f, 0.0f);
+	Vector3 wolfSecond = new Vector3(4.25f, -.75f, 0.0f);
 	// Use this for initialization
 	void Start () {
 		buttons = this.GetComponentsInChildren<Button>();
 		currentButton = 0;
+
+		selectorItem.transform.position = wolfStart;
 	}
 
 	// Update is called once per frame
@@ -34,6 +41,15 @@ public class endScreenSelect_scr : MonoBehaviour {
 		if (Input.GetKeyDown( KeyCode.Return))
 		{
 			selectCase();
+		}
+
+		if (currentButton == 0)
+		{
+			selectorItem.transform.position = wolfStart;
+		}
+		else
+		{
+			selectorItem.transform.position = wolfSecond;
 		}
 	}
 

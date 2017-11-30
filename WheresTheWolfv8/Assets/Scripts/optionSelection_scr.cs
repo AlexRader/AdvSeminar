@@ -13,14 +13,17 @@ public class optionSelection_scr : MonoBehaviour
 	private Button[] buttons;
 
     public GameObject selectorItem;
-
+	public GameObject controls;
+	private GameObject toDestroy;
 	private GameObject storedVariables;
-    Vector3 wolfStart = new Vector3(-1.0f, -1f, 0.0f);
-    Vector3 wolfSecond = new Vector3(1.5f, -1f, 0.0f);
-    //Vector3 wolfStart = new Vector3(0.0f, 0.0f, 0.0f);
+    Vector3 wolfStart = new Vector3(-5.5f, -1f, 0.0f);
+    Vector3 wolfSecond = new Vector3(0.5f, -1f, 0.0f);
+	Vector3 wolfThird = new Vector3(6f, -1f, 0.0f);
 
-    // Use this for initialization
-    void Start () {
+	private bool created = false;
+
+	// Use this for initialization
+	void Start () {
 		//menu = GameObject.Find("CanvasLookup").GetComponent<Canvas>();
 		buttons = this.GetComponentsInChildren<Button>();
 		currentButton = 0;
@@ -54,10 +57,12 @@ public class optionSelection_scr : MonoBehaviour
         {
             selectorItem.transform.position = wolfStart;
         }
-        else
+        else if(currentButton == 1)
         {
             selectorItem.transform.position = wolfSecond;
         }
+		else
+			selectorItem.transform.position = wolfThird;
 	}
 
 	void withinBounds()
@@ -78,9 +83,27 @@ public class optionSelection_scr : MonoBehaviour
 			case(0):
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 				break;
-			case(1):
+			case (1):
+				createControls();
+				break;
+			case (2):
 				Application.Quit();
 				break;
 		}
+	}
+	void createControls()
+	{
+		created = !created;
+
+		if (created)
+		{
+			Destroy(toDestroy);
+		}
+		else
+		{
+			Instantiate(controls);
+			toDestroy = GameObject.FindGameObjectWithTag("controls");
+		}
+
 	}
 }

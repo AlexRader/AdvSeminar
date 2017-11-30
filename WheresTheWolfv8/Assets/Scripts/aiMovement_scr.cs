@@ -50,6 +50,7 @@ public class aiMovement_scr : MonoBehaviour
 
     private const float MAXTIME = 1.0f;
     private float curTime = 0;
+	private float moveCheck = 0;
     private float attackTime;
     private bool enemyAI;
     public Color color;
@@ -153,11 +154,11 @@ public class aiMovement_scr : MonoBehaviour
         }
         else if (run == false && returnNow == true)
         {
-            curTime -= Time.deltaTime;
-            if (curTime <= 0)
+			moveCheck -= Time.deltaTime;
+            if (moveCheck <= 0)
             {
                 velocity = endPos - this.transform.position;
-                curTime = MAXTIME;
+                moveCheck = MAXTIME;
             }
             if (this.transform.position.x - endPos.x < 1f && this.transform.position.x - endPos.x > -1f)
             {
@@ -169,7 +170,7 @@ public class aiMovement_scr : MonoBehaviour
                     velocity = endPos - this.transform.position;
                 }
             }
-            rayCastDetection();
+						rayCastDetection();
         }
         else if (run == true)
             runningScript();
@@ -215,11 +216,11 @@ public class aiMovement_scr : MonoBehaviour
             {
                 position = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
                 distance = position.magnitude;
-                if (distance <= 9.0f)
+                if (distance <= 6.0f)
                 {
                     attacking = true;
                 }
-                if (distance > 9.0f && attacking == false)
+                if (distance > 6.0f && attacking == false)
                 {
                     velocity = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
                     velocity = velocity.normalized * maxSpeed;
@@ -291,7 +292,7 @@ public class aiMovement_scr : MonoBehaviour
                 tempStore = temp.x;
                 temp.x = temp.y * -1.0f;
                 temp.y = tempStore;
-                velocity += temp * 2f;
+                velocity += temp * 1.5f;
                 velocity = velocity.normalized * maxSpeed;
             }
         }

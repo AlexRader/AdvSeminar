@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class spawnLvl_scr : MonoBehaviour 
 {
 	Scene scene;
-	private Vector3 playerLocation = new Vector3 (-25.0f, 0.0f);
+	private Vector3 playerLocation = new Vector3 (-20.0f, 15.0f);
 	private Vector3 cameraDepth = new Vector3 (-25.0f, 0.0f, -1.0f);
 	private Vector3 lightPosition = new Vector3(-11f, -0.5f, -12f);
 	[SerializeField]

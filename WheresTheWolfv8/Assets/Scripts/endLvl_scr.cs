@@ -13,7 +13,7 @@ public class endLvl_scr : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		maxAmount = 30;
+		maxAmount = 60;
 		curAmount = maxAmount;
 		vecAmount = new Vector2(curAmount, maxAmount);
 		currentPercentage = new Vector3(maxAmount, vecAmount.x, 180.0f / maxAmount);

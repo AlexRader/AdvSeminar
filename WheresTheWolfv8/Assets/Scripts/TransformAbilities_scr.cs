@@ -32,6 +32,8 @@ public class TransformAbilities_scr : MonoBehaviour
 
 	private GameObject playerRef;
 	private GameObject cameraRef;
+	private bool bite = false;
+	private bool dash = false;
 
 	public enum DashState 
 	{
@@ -51,10 +53,11 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
 		case BiteState.Ready:
 			var isBiteKeyDown = Input.GetKeyDown (KeyCode.J);
-			if (isBiteKeyDown) 
+			if (isBiteKeyDown && !dash) 
 			{
 				savedVelocity = rb.velocity;
 				attack = true;
+					bite = true;
 				rb.velocity = Vector2.zero;
 				biteState = BiteState.Biting;
                 attackModify(false, 1f);
@@ -66,6 +69,7 @@ public class TransformAbilities_scr : MonoBehaviour
 			if (biteTimer <= 0) 
 			{
 				attack = false;
+				bite = false;
 				biteTimer = maxBite;
 				rb.velocity = savedVelocity;
                 attackModify(false, 3f);
@@ -82,10 +86,11 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
 		case DashState.Ready:
 			var isDashKeyDown = Input.GetKeyDown (KeyCode.K);
-			if(isDashKeyDown)
+			if(isDashKeyDown && !bite)
 			{
 				savedVelocity = rb.velocity;
 				attack = true;
+				dash = true;
 				rb.velocity =  new Vector2(rb.velocity.x * 3f, rb.velocity.y * 3f);
 				dashState = DashState.Dashing;
                 SendMessage("dashingNow", attack);
@@ -97,6 +102,7 @@ public class TransformAbilities_scr : MonoBehaviour
 			dashTimer -= Time.deltaTime;
 			if(dashTimer <= 0)
 			{
+				dash = false;
 				attack = false;
 				dashTimer = cooldownTimer;
 				rb.velocity = savedVelocity;

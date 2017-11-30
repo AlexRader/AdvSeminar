@@ -88,16 +88,16 @@ public class aiControl_scr : MonoBehaviour {
 		switch (typeDay) 
 		{
 		case TypeDay.Standard:
-			standardSpawns = new int[4] { 8, 10, 4, 15 };
+			standardSpawns = new int[1] { 50 };
 			break;
 		case TypeDay.Fishing:
-			standardSpawns = new int[4] { 10, 12, 4, 15 };
+			standardSpawns = new int[1] { 52 };
 			break;
 		case TypeDay.Festival:
-				standardSpawns = new int[4] { 10, 10, 6, 18 };
+				standardSpawns = new int[1] { 65 };
 				break;
 		case TypeDay.Sunday:
-				standardSpawns = new int[4] { 12, 14, 5, 10 };
+				standardSpawns = new int[1] { 55 };
 				break;
 		}
 		for (int i = 0; i < standardSpawns.Length; ++i) 
@@ -136,10 +136,10 @@ public class aiControl_scr : MonoBehaviour {
 		}
 	}
 
-	void areaOfSpawn (int var)
+	void areaOfSpawn(int var)
 	{
-		randomSpawn = Random.Range (0, 10);
-		switch (var) 
+		randomSpawn = Random.Range(0, 10);
+		/*switch (var) 
 		{
 		case 0:
 			spawnPos = firstMarket [Random.Range (0, (firstMarket.Length))].transform.position;
@@ -175,6 +175,21 @@ public class aiControl_scr : MonoBehaviour {
 			newObj.name = "AI" + theCount;
 			break;
 
+		}*/
+		switch (var)
+		{
+			case 0:
+				int location = Random.Range(0, (patrolArea.Length));
+				spawnPos = patrolArea[location].transform.position;
+				newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
+				newObj.SendMessage("currentLocation", location);
+				newObj.SendMessage("setConfined", false);
+				newObj.SendMessage("setMoveable", false);
+				newObj.SendMessage("setArea", patrolArea);
+
+
+				newObj.name = "AI" + theCount;
+				break;
 		}
         if (randomSpawn >= 8)
         {
@@ -190,9 +205,9 @@ public class aiControl_scr : MonoBehaviour {
 
 	void setLists()
 	{
-		firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
-		secondMarket = GameObject.FindGameObjectsWithTag ("secondMarket");
-		homeArea = GameObject.FindGameObjectsWithTag("homeLocation");
+		//firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
+		//secondMarket = GameObject.FindGameObjectsWithTag ("secondMarket");
+		//homeArea = GameObject.FindGameObjectsWithTag("homeLocation");
 		//patrolArea = GameObject.FindGameObjectsWithTag ("walkPath");
 		numberOfItems = GameObject.FindGameObjectsWithTag ("walkPath").Length;
 		patrolArea = GameObject.FindGameObjectsWithTag ("walkPath");
