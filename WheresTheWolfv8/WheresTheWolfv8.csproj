@@ -93,7 +93,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\sad.cs" />
     <Compile Include="Assets\Scripts\aiControl_scr.cs" />
     <Compile Include="Assets\Scripts\aiMovement_scr.cs" />
     <Compile Include="Assets\Scripts\animationBehaviors.cs" />

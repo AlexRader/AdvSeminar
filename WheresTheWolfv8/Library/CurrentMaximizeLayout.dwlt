@@ -23,7 +23,7 @@ MonoBehaviour:
   m_MinSize: {x: 713, y: 492}
   m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 120
+  controlID: 7790
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -47,10 +47,10 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 618
-    y: 626
+    y: 19
     width: 545
     height: 512
-  m_MaximizeOnPlay: 0
+  m_MaximizeOnPlay: 1
   m_Gizmos: 0
   m_Stats: 0
   m_SelectedSizes: 05000000000000000000000000000000000000000000000000000000000000000000000000000000
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_MinSize: {x: 436, y: 492}
   m_MaxSize: {x: 14006, y: 14042}
   vertical: 1
-  controlID: 121
+  controlID: 7743
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -177,14 +177,14 @@ MonoBehaviour:
     width: 1163
     height: 513
   m_SceneLighting: 1
-  lastFramingTime: 33.81679944424847
+  lastFramingTime: 382.687399393441
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 29.990253, y: 223.13992, z: 0}
+    m_Target: {x: -2.5621405, y: -2.4996479, z: 0}
     speed: 2
-    m_Value: {x: 29.990253, y: 223.13992, z: 0}
+    m_Value: {x: -2.5621405, y: -2.4996479, z: 0}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -211,9 +211,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 167.1826
+    m_Target: 23.46296
     speed: 2
-    m_Value: 167.1826
+    m_Value: 23.46296
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -260,7 +260,7 @@ MonoBehaviour:
     - {fileID: 1107318839632412760, guid: 1e233f670da7f684b8535b4e2f26df12, type: 2}
     - {fileID: 1107879412376850782, guid: a3974f548f944e0459d0451ae56ea339, type: 2}
     m_ValueSerializationHelper:
-    - {x: 498.60004, y: 631.8}
+    - {x: 577.80005, y: 478.59998}
     - {x: 597.60004, y: 193}
     - {x: 585.60004, y: 157}
     - {x: 571.60004, y: 193}
@@ -268,10 +268,10 @@ MonoBehaviour:
     - {x: 647.80005, y: 524.6}
     - {x: 678.60004, y: 349.6001}
   m_PreviewAnimator: {fileID: 0}
-  m_AnimatorController: {fileID: 9100000, guid: 1e233f670da7f684b8535b4e2f26df12,
+  m_AnimatorController: {fileID: 9100000, guid: 5bbfcce7ab62e3e4d97dc9f75ec8e870,
     type: 2}
   m_BreadCrumbs:
-  - m_Target: {fileID: 1107318839632412760, guid: 1e233f670da7f684b8535b4e2f26df12,
+  - m_Target: {fileID: 1107592307755074236, guid: 5bbfcce7ab62e3e4d97dc9f75ec8e870,
       type: 2}
     m_ScrollPosition: {x: 0, y: 0}
   stateMachineGraph: {fileID: 0}
@@ -307,7 +307,7 @@ MonoBehaviour:
   m_MinSize: {x: 436, y: 271}
   m_MaxSize: {x: 14006, y: 10021}
   vertical: 0
-  controlID: 122
+  controlID: 7744
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -371,19 +371,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Sprites
+    - Assets/Scenes
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Sprites
+  - Assets/Scenes
   m_LastFoldersGridSize: 96
   m_LastProjectPath: C:\Users\Student\Desktop\newADVSEM\AdvSeminar\WheresTheWolfv8
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: aa380000
-    m_LastClickedID: 14506
-    m_ExpandedIDs: 00000000a0260000aa380000de3a0000063c0000203c000000ca9a3bffffff7f
+    m_SelectedIDs: be3a0000
+    m_LastClickedID: 15038
+    m_ExpandedIDs: 0000000080260000ee2600002a3000008a380000be3a0000e63b0000003c000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -411,7 +411,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000a0260000aa380000de3a0000063c0000203c0000
+    m_ExpandedIDs: 0000000080260000ee2600002a3000008a380000be3a0000e63b0000003c000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -436,8 +436,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 382f0000
+    m_LastClickedInstanceID: 12088
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 00000000a4260000243e0000e8310000b6310000cc370000bc310000
     m_RenameOverlay:
@@ -463,7 +463,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 56}
+    m_ScrollPosition: {x: 0, y: 0}
     m_GridSize: 96
   m_DirectoriesAreaWidth: 112
 --- !u!114 &10
@@ -541,7 +541,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 292}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 177
+  controlID: 7791
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -624,23 +624,23 @@ MonoBehaviour:
     height: 573
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
+    m_SelectedIDs: 382f0000
     m_LastClickedID: 0
-    m_ExpandedIDs: 7af7ffff7ef7ffff92f7ffff9ef7ffffaaf7ffffaef7ffffd6f7ffffd8f7ffff8cfbffff00000000
+    m_ExpandedIDs: d4befdff80c0fdff5881ffffe0f1ffff02f2ffff30f2ffff32f2ffff18fcffff00000000b4510000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: WerewolfTime
-      m_OriginalName: WerewolfTime
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -2146
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 13}
     m_SearchString: 

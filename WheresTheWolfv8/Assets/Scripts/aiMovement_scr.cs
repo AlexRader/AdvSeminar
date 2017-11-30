@@ -43,7 +43,8 @@ public class aiMovement_scr : MonoBehaviour
     int layerMaskTwo = 1 << 9;
 
     private GameObject playerRef;
-    private GameObject[] aiGenPath;
+    public GameObject[] aiGenPath;
+    private int numberOfItems;
 
     private Component test;
 
@@ -54,6 +55,8 @@ public class aiMovement_scr : MonoBehaviour
     public Color color;
 
     private Animator anim;
+
+    float waitNumber;
 
     void Start()
     {
@@ -70,7 +73,10 @@ public class aiMovement_scr : MonoBehaviour
         storedSpeed = maxSpeed;
         playerRef = GameObject.FindGameObjectWithTag("Player");
         test = GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>();
+
+        numberOfItems = GameObject.FindGameObjectsWithTag("walkPath").Length;
         aiGenPath = GameObject.FindGameObjectWithTag("ai_control").GetComponent<aiControl_scr>().patrolArea;
+
         attackTime = MAXTIME;
 
         anim = gameObject.GetComponent<Animator>();
@@ -127,7 +133,11 @@ public class aiMovement_scr : MonoBehaviour
     {
         getNextLocation();
     }
-
+    void waitTill()
+    {
+    }
+    // to get the pause function working so the environment is more believable use
+    // setMoveable(true);
     void move()
     {
         if (run == false && notMoveable == false && returnNow == false)
@@ -143,17 +153,23 @@ public class aiMovement_scr : MonoBehaviour
         }
         else if (run == false && returnNow == true)
         {
-            velocity = endPos - this.transform.position;
-            rayCastDetection();
+            curTime -= Time.deltaTime;
+            if (curTime <= 0)
+            {
+                velocity = endPos - this.transform.position;
+                curTime = MAXTIME;
+            }
             if (this.transform.position.x - endPos.x < 1f && this.transform.position.x - endPos.x > -1f)
             {
                 if (this.transform.position.y - endPos.y < 1f && this.transform.position.y - endPos.y > -1f)
                 {
                     returnNow = false;
+                    setConfined(false);
                     moveTo();
                     velocity = endPos - this.transform.position;
                 }
             }
+            rayCastDetection();
         }
         else if (run == true)
             runningScript();
@@ -237,7 +253,7 @@ public class aiMovement_scr : MonoBehaviour
             setConfined(false);
             findEndpoint();
             maxSpeed = storedSpeed;
-            setArea(GameObject.FindGameObjectWithTag("ai_control").GetComponent<aiControl_scr>().patrolArea);
+            setArea(aiGenPath);
 
         }
 
@@ -398,23 +414,18 @@ public class aiMovement_scr : MonoBehaviour
         //comparePosition = comparePosition - gameObject.transform.position;
         tempPosition = comparePosition;
 
-        while (i < aiGenPath.Length)
+        for (i = 0;  i < numberOfItems; i++)
         {
             comparePosition = aiGenPath[i].transform.position;
             //comparePosition = comparePosition - gameObject.transform.position;
             if ((comparePosition - gameObject.transform.position).magnitude <= (tempPosition - gameObject.transform.position).magnitude)
             {
                 tempPosition = comparePosition;
-                if (tempPosition.magnitude <= 10)
-                {
-                    endPos = tempPosition;
-                    break;
-                }
-
+                currentLocation(i);
             }
-            i++;
         }
-        myLocation = 1;
+        
+        myArea = aiGenPath;
         endPos = tempPosition;
     }
 }

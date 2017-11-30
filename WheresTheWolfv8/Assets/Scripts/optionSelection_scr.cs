@@ -12,9 +12,15 @@ public class optionSelection_scr : MonoBehaviour
 	[SerializeField]
 	private Button[] buttons;
 
+    public GameObject selectorItem;
+
 	private GameObject storedVariables;
-	// Use this for initialization
-	void Start () {
+    Vector3 wolfStart = new Vector3(-1.0f, -1f, 0.0f);
+    Vector3 wolfSecond = new Vector3(1.5f, -1f, 0.0f);
+    //Vector3 wolfStart = new Vector3(0.0f, 0.0f, 0.0f);
+
+    // Use this for initialization
+    void Start () {
 		//menu = GameObject.Find("CanvasLookup").GetComponent<Canvas>();
 		buttons = this.GetComponentsInChildren<Button>();
 		currentButton = 0;
@@ -22,6 +28,9 @@ public class optionSelection_scr : MonoBehaviour
 		storedVariables = GameObject.FindGameObjectWithTag("variables");
 		storedVariables.SendMessage("clearStored");
 		storedVariables.SendMessage("setBool");
+
+        // = blah;
+        selectorItem.transform.position = wolfStart;
 
 	}
 	
@@ -41,6 +50,14 @@ public class optionSelection_scr : MonoBehaviour
 		{
 			selectCase();
 		}
+        if (currentButton == 0)
+        {
+            selectorItem.transform.position = wolfStart;
+        }
+        else
+        {
+            selectorItem.transform.position = wolfSecond;
+        }
 	}
 
 	void withinBounds()
