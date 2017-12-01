@@ -302,7 +302,7 @@ public class aiMovement_scr : MonoBehaviour
     void death()
     {
         test.SendMessage("modScore", 100);
-        playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
+		playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
         gameObject.layer = 11;
         //Destroy (this.gameObject);
     }
@@ -312,7 +312,8 @@ public class aiMovement_scr : MonoBehaviour
     {
         if (coll.tag == "Player" && coll.GetComponent<TransformAbilities_scr>().attack == true)
         {
-            myRB.velocity = coll.GetComponent<movement_scr>().returnVelocity;
+			playerRef.GetComponent<TransformAbilities_scr>().SendMessage("attackModify");
+			myRB.velocity = coll.GetComponent<movement_scr>().returnVelocity;
             alive = false;
         }
     }

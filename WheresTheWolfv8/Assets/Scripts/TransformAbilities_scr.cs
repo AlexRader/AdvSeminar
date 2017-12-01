@@ -57,11 +57,11 @@ public class TransformAbilities_scr : MonoBehaviour
 			{
 				savedVelocity = rb.velocity;
 				attack = true;
-					bite = true;
+				bite = true;
 				rb.velocity = Vector2.zero;
 				biteState = BiteState.Biting;
-                attackModify(false, 1f);
-                SendMessage("slashingNow", attack);
+				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
+				SendMessage("slashingNow", attack);
                }
 			break;
 		case BiteState.Biting:
@@ -72,7 +72,7 @@ public class TransformAbilities_scr : MonoBehaviour
 				bite = false;
 				biteTimer = maxBite;
 				rb.velocity = savedVelocity;
-                attackModify(false, 3f);
+				gameObject.GetComponent<CircleCollider2D>().radius = 3f;
 				biteState = BiteState.Ready;
                 SendMessage("slashingNow", attack);
             }
@@ -94,8 +94,7 @@ public class TransformAbilities_scr : MonoBehaviour
 				rb.velocity =  new Vector2(rb.velocity.x * 3f, rb.velocity.y * 3f);
 				dashState = DashState.Dashing;
                 SendMessage("dashingNow", attack);
-                attackModify(true, 1f);
-
+				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
 			}
 			break;
 		case DashState.Dashing:
@@ -107,8 +106,8 @@ public class TransformAbilities_scr : MonoBehaviour
 				dashTimer = cooldownTimer;
 				rb.velocity = savedVelocity;
 				dashState = DashState.Cooldown;
-                attackModify(true, 3f);
-                SendMessage("dashingNow", attack);
+				gameObject.GetComponent<CircleCollider2D>().radius = 3f;
+				SendMessage("dashingNow", attack);
             }
 		    break;
 		case DashState.Cooldown:
@@ -123,11 +122,16 @@ public class TransformAbilities_scr : MonoBehaviour
 		}
 	}
 
-    void attackModify(bool shakeType, float radius)
+    void attackModify()
     {
-        playerRef.SendMessage("disableInput");
+		//playerRef.SendMessage("disableInput");
+		bool shakeType;
+		if (bite)
+			shakeType = false;
+		else
+			shakeType = true;
         cameraRef.SendMessage("shakingRoutine", shakeType);
-        gameObject.GetComponent<CircleCollider2D>().radius = radius;
+        //gameObject.GetComponent<CircleCollider2D>().radius = radius;
     }
 
 	// Use this for initialization

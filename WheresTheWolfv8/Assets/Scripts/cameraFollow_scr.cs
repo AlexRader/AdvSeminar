@@ -17,10 +17,13 @@ public class cameraFollow_scr : MonoBehaviour
 	private bool shaking = false;
 	private bool typeShake = false;
 	private float shakeAmount;
+	private float timer;
+	private const float MAXTIME = 1.6f;
 
 	// Use this for initialization
 	void Start()
 	{
+		timer = MAXTIME;
 		player = GameObject.FindGameObjectWithTag("Player");
 		shakeAmount = 15f;
 	}
@@ -36,27 +39,27 @@ public class cameraFollow_scr : MonoBehaviour
 	{
 		if (shaking)
 		{
-			Vector3 newPos = transform.position + Random.insideUnitSphere * (Time.deltaTime * shakeAmount);
-			if (typeShake == false)
-				newPos.y = transform.position.y;
-			newPos.z = transform.position.z;
+			timer -= Time.deltaTime;
+			if (timer > 0)
+			{
+				Vector3 newPos = transform.position + Random.insideUnitSphere * (Time.deltaTime * shakeAmount);
+				if (typeShake == false)
+					newPos.y = transform.position.y;
+				newPos.z = transform.position.z;
 
-			transform.position = newPos;
+				transform.position = newPos;
+			}
+			else
+			{
+				shaking = false;
+				timer = MAXTIME;
+			}
 		}
 	}
 
 	public void shakingRoutine(bool type)
 	{
-		shaking = !shaking;
+		shaking = true;
 		typeShake = type;
 	}
-
-
-
-
-
-
-
-
-
 }
