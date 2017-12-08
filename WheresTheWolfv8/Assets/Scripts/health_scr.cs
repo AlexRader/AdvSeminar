@@ -20,6 +20,9 @@ public class health_scr : MonoBehaviour {
 	void modHP(float damage)
 	{	
 		vecAmount.x -= damage;
+        if (vecAmount.x > maxAmount)
+            vecAmount.x = maxAmount;
+        
 		this.SendMessage ("HandleBar", vecAmount);
 	}
 

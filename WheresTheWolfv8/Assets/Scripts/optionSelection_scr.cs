@@ -40,7 +40,7 @@ public class optionSelection_scr : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetKeyDown( KeyCode.A) || (Input.GetKeyDown( KeyCode.LeftArrow)))
+		if (Input.GetKeyDown( KeyCode.A) || Input.GetKeyDown( KeyCode.LeftArrow))
 			currentButton -= 1;
 		else if (Input.GetKeyDown( KeyCode.D) || (Input.GetKeyDown( KeyCode.RightArrow)))
 		{
@@ -49,7 +49,7 @@ public class optionSelection_scr : MonoBehaviour
 		withinBounds();
 		buttons[currentButton].Select();
 
-		if (Input.GetKeyDown( KeyCode.Return))
+		if (Input.GetKeyDown( KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
 		{
 			selectCase();
 		}
@@ -95,7 +95,7 @@ public class optionSelection_scr : MonoBehaviour
 	{
 		created = !created;
 
-		if (created)
+		if (!created)
 		{
 			Destroy(toDestroy);
 		}

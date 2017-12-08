@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Animations;
-//using System;
 
 public class aiControl_scr : MonoBehaviour {
 
@@ -22,25 +21,20 @@ public class aiControl_scr : MonoBehaviour {
 
     private int enemyCount = 0;
     private int sacrificeCount = 0;
-    private const int MAX_ENEMIES = 25;
-    private const int MAX_SACRIFICES = 50;
+    private const int MAX_ENEMIES = 20;
+    private const int MAX_SACRIFICES = 40;
     private int currentEnemies = 10;
     private int extraEnemies = 0;
 
     private float spawnTimer;
-    private const float MAX_SPAWN_TIMER = .8f;
+    private const float MAX_SPAWN_TIMER = .5f;
 
     bool switchDirection = false;
-
-    private GameObject scoreReference;
-
 
     public GameObject[] findObjects;
 
 	private int[] standardSpawns;
 	private int numberOfItems;
-
-	//private int inc = 0;
 
 	private float multiplyFactor = 1.0f;
 
@@ -111,7 +105,6 @@ public class aiControl_scr : MonoBehaviour {
 		{
 			standardSpawns [i] = Mathf.RoundToInt(standardSpawns [i] * multiplyFactor);
 		}
-        scoreReference = GameObject.FindGameObjectWithTag("variables");
 		setLists ();
 
 		spawnUnits ();
@@ -127,15 +120,7 @@ public class aiControl_scr : MonoBehaviour {
         {
             if (enemyCount < currentEnemies + extraEnemies)
             {
-                int location = Random.Range(0, (aiSpawn.Length));
-                spawnPos = aiSpawn[location].transform.position;
-                newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
-                newObj.SendMessage("currentLocation", location);
-                newObj.SendMessage("setConfined", switchDirection);
-                newObj.SendMessage("setMoveable", false);
-                newObj.SendMessage("setArea", patrolArea);
-
-                newObj.name = "AI" + theCount;
+                condensedSpawnPacket();
 
                 newObj.SendMessage("switchEnemy", true);
                 newObj.SendMessage("setAnimator", allAnimation[5]);
@@ -144,24 +129,40 @@ public class aiControl_scr : MonoBehaviour {
             }
             if (sacrificeCount < MAX_SACRIFICES)
             {
-                int location = Random.Range(0, (aiSpawn.Length));
-                spawnPos = aiSpawn[location].transform.position;
-                newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
-                newObj.SendMessage("currentLocation", location);
-                newObj.SendMessage("setConfined", switchDirection);
-                newObj.SendMessage("setMoveable", false);
-                newObj.SendMessage("setArea", patrolArea);
-
-                newObj.name = "AI" + theCount;
+                condensedSpawnPacket();
 
                 newObj.SendMessage("switchEnemy", false);
                 newObj.SendMessage("setAnimator", allAnimation[Random.Range(1, 5)]);
                 newObj.SendMessage("setReturn");
                 sacrificeCount++;
             }
+            spawnTimer = MAX_SPAWN_TIMER;
         }
         switchDirection = !switchDirection;
     }
+
+    void condensedSpawnPacket()
+    {
+        int location = Random.Range(0, (aiSpawn.Length));
+        if ((aiSpawn[location].transform.position - GameObject.FindGameObjectWithTag("Player").transform.position).sqrMagnitude < 100)
+        {
+            if (location == 0)
+                location = aiSpawn.Length - 1;
+            else if (location == aiSpawn.Length - 1)
+                location = 0;
+            else
+                location += 1;
+        }
+        spawnPos = aiSpawn[location].transform.position;
+        newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
+        newObj.SendMessage("currentLocation", location);
+        newObj.SendMessage("setConfined", switchDirection);
+        newObj.SendMessage("setMoveable", false);
+        newObj.SendMessage("setArea", patrolArea);
+
+        newObj.name = "AI" + theCount;
+    }
+
 
     void enemyAISpawn(int var)
     {

@@ -99,7 +99,9 @@
     <Compile Include="Assets\Scripts\arrow_scr.cs" />
     <Compile Include="Assets\Scripts\Bar_scr.cs" />
     <Compile Include="Assets\Scripts\cameraFollow_scr.cs" />
+    <Compile Include="Assets\Scripts\colorLerp_scr.cs" />
     <Compile Include="Assets\Scripts\dashRender_scr.cs" />
+    <Compile Include="Assets\Scripts\DestroyParticles_scr.cs" />
     <Compile Include="Assets\Scripts\displayScore_scr.cs" />
     <Compile Include="Assets\Scripts\endLevelCleanup\gameOverCutScene.cs" />
     <Compile Include="Assets\Scripts\endLvl_scr.cs" />

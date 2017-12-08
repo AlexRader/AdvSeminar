@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class spawnLvl_scr : MonoBehaviour 
 {
 	Scene scene;
-	private Vector3 playerLocation = new Vector3 (-20.0f, 15.0f);
+	private Vector3 playerLocation = new Vector3 (6.0f, 21.5f);
 	private Vector3 cameraDepth = new Vector3 (-25.0f, 0.0f, -1.0f);
 	private Vector3 lightPosition = new Vector3(-0f, 30f, -12f);
 	[SerializeField]
@@ -36,8 +36,8 @@ public class spawnLvl_scr : MonoBehaviour
 			directionalLight = Instantiate(directionalLight, lightPosition, Quaternion.Euler(0,90,0), transform);
 	}
 
-	void rotate(float varInc)
-	{
-		directionalLight.SendMessage("rotate", varInc);
+    private void Update()
+    {
+        directionalLight.SendMessage("rotate");
 	}
 }

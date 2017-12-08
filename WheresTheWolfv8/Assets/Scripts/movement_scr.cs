@@ -81,4 +81,5 @@ public class movement_scr : MonoBehaviour
 	{
 		dash = !dash;
 	}
+
 }

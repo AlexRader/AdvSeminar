@@ -25,19 +25,14 @@ public class arrow_scr : MonoBehaviour {
 		myRB.velocity = velocity.normalized;
 		myRB.velocity *= maxSpeed;
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-	}
-
 
 	void OnCollisionEnter2D(Collision2D coll)
 	{
 		if (coll.gameObject.tag == "Player")
 		{
 			coll.gameObject.GetComponent<Timer_scr>().SendMessage("changeHealth");
-			Destroy(this.gameObject);
+            coll.gameObject.GetComponent<colorLerp_scr>().SendMessage("startRoutine");
+            Destroy(this.gameObject);
 		}
 		else
 		{

@@ -7,6 +7,7 @@ public class lightRotation_scr : MonoBehaviour {
 
 	Scene scene;
 	private float yRotation;
+    private const float INC = .1f; 
 
 	// Use this for initialization
 	void Start ()
@@ -18,8 +19,10 @@ public class lightRotation_scr : MonoBehaviour {
 			yRotation = 90f;
 	}
 
-	void rotate(float currentRotation)
+    void rotate()
 	{
-		gameObject.transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation + currentRotation, transform.eulerAngles.z);
+        yRotation += Time.deltaTime + INC;
+
+        gameObject.transform.eulerAngles = new Vector3(transform.eulerAngles.x, yRotation, transform.eulerAngles.z);
 	}
 }

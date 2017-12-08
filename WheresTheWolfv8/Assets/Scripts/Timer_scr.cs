@@ -16,12 +16,6 @@ public class Timer_scr : MonoBehaviour
 		curTime = MAXTIME;
 		if (timers == null) 
 			timers = GameObject.FindGameObjectsWithTag("timer");
-        Debug.Log(timers.Length);
-        for (int i = 0; i < timers.Length; ++i)
-        {
-            Debug.Log(timers[i].name);
-        }
-
     }
 	
 	// Update is called once per frame

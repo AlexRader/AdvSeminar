@@ -38,7 +38,7 @@ public class endScreenSelect_scr : MonoBehaviour {
 		withinBounds();
 		buttons[currentButton].Select();
 
-		if (Input.GetKeyDown( KeyCode.Return))
+		if (Input.GetKeyDown( KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
 		{
 			selectCase();
 		}

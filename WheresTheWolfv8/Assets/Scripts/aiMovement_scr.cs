@@ -49,7 +49,7 @@ public class aiMovement_scr : MonoBehaviour
     private Component test;
 
     private const float MAXTIME = 1.0f;
-    private const float MAX_ATTACK_CHECK = .3f;
+    private const float MAX_ATTACK_CHECK = 1f;
     private float curTime = 0;
 	private float moveCheck = 0;
     private float attackTime;
@@ -58,14 +58,16 @@ public class aiMovement_scr : MonoBehaviour
 
     private Animator anim;
 
-    float waitNumber;
+    private float waitNumber;
 
+    public GameObject deathParticles;
+    private bool times = false;
+    private const float MAX_DEATH = 20.0f;
+    private float deathTimer = 0;
     void Start()
     {
         myRB = GetComponent<Rigidbody2D>();
         endPos = this.transform.position;
-        Physics2D.IgnoreLayerCollision(8, 10, true);
-        Physics2D.IgnoreLayerCollision(8, 8, true);
         Physics2D.IgnoreLayerCollision(8, 0, true);
         Physics2D.IgnoreLayerCollision(8, 11, true);
         alive = true;
@@ -82,6 +84,7 @@ public class aiMovement_scr : MonoBehaviour
         attackTime = MAXTIME;
 
         anim = gameObject.GetComponent<Animator>();
+        deathTimer = MAX_DEATH;
     }
 
     void spriteDirection()
@@ -115,13 +118,26 @@ public class aiMovement_scr : MonoBehaviour
         {
             anim.SetBool("dead", true);
             deathHappened = !deathHappened;
-            //deathtimer -= Time.deltaTime;
             myRB.velocity = myRB.velocity / DRAG;
             if (myRB.velocity.magnitude <= STOPSPEED)
                 myRB.velocity = Vector2.zero;
             if (myRB.velocity == Vector2.zero)
                 death();
         }
+        if (deathHappened )
+        {
+            if (!times)
+            {
+                Instantiate(deathParticles, gameObject.transform.position, gameObject.transform.rotation);
+                times = true;
+            }
+            deathTimer -= Time.deltaTime;
+            if (deathTimer <= 0)
+            {
+                Destroy(gameObject);
+            }
+        }
+
     }
     void FixedUpdate()
     {
@@ -139,7 +155,6 @@ public class aiMovement_scr : MonoBehaviour
     {
     }
     // to get the pause function working so the environment is more believable use
-    // setMoveable(true);
     void move()
     {
         if (run == false && notMoveable == false && returnNow == false)
@@ -167,7 +182,6 @@ public class aiMovement_scr : MonoBehaviour
                 if (this.transform.position.y - endPos.y < 1f && this.transform.position.y - endPos.y > -1f)
                 {
                     returnNow = false;
-                    //setConfined(false);
                     moveTo();
                     velocity = endPos - this.transform.position;
                 }
@@ -176,34 +190,24 @@ public class aiMovement_scr : MonoBehaviour
         }
         else if (run == true)
             runningScript();
-        //velocity = this.transform.position - GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>().transform.position;
 
-        //velocity /= inc;
         myRB.velocity = Vector3.zero;
         myRB.velocity = velocity;
     }
 
     void runningScript()
     {
-        Vector3 temp;
-        Vector2 positionPoint = Vector2.zero;
         Vector2 playerDirection = Vector2.zero;
 
-        Vector2 position;
-        float distance;
+        Vector2 position = Vector2.zero;
+        float distance = 0.0f;
         bool attacking = false;
-        //Vector3 check = Vector3.zero;
-
-        float tempStore;
-
-        positionPoint = this.myRB.velocity;
 
         playerDirection = playerRef.transform.position - transform.position;
 
         curTime -= Time.deltaTime;
         if (enemyAI == false)
         {
-            //anim.SetTrigger("running");
             if (curTime <= 0)
             {
                 velocity = this.transform.position - playerRef.GetComponent<Rigidbody2D>().transform.position;
@@ -218,11 +222,11 @@ public class aiMovement_scr : MonoBehaviour
             {
                 position = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
                 distance = position.sqrMagnitude;
-                if (distance <= 36.0f)
+                if (distance <= 42.0f)
                 {
                     attacking = true;
                 }
-                if (distance > 36.0f && attacking == false)
+                if (distance > 42.0f && attacking == false)
                 {
                     velocity = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
                     velocity = velocity.normalized * maxSpeed;
@@ -248,42 +252,26 @@ public class aiMovement_scr : MonoBehaviour
                 anim.SetBool("shoot", false);
             }
             if (enemyAI != true)
-                anim.SetBool("run", false);
-
-            returnNow = true;
-            run = false;
-            //setMoveable(false);
-            findEndpoint();
-            maxSpeed = storedSpeed;
-            setArea(aiGenPath);
-
-        }
-
-        Debug.DrawRay(this.transform.position, positionPoint, Color.blue);
-        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude * Time.deltaTime * 3, layermask);
-        if (hit.collider != null)
-        {
-            if (hit.collider.gameObject.tag.Equals("building"))
             {
-                // Add direction from hit face, times how much force to repel by
-                temp = positionPoint;
-                tempStore = temp.x;
-                temp.x = temp.y * -1.0f;
-                temp.y = tempStore;
-                velocity += temp; // * 2f;
-                velocity = velocity.normalized * maxSpeed;
+                anim.SetBool("run", false);
+                returnNow = true;
+                run = false;
+                findEndpoint();
+                maxSpeed = storedSpeed;
+                setArea(aiGenPath);
             }
         }
+        rayCastDetection();
     }
 
     void rayCastDetection()
     {
-        Vector3 temp;
-        float tempStore;
+        Vector3 temp = Vector3.zero;
+        float tempStore = 0.0f;
         Vector2 positionPoint = myRB.velocity;
 
         Debug.DrawRay(this.transform.position, positionPoint, Color.blue);
-        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude * Time.deltaTime * 3, layermask);
+        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude * Time.deltaTime * 5, layermask);
         if (hit.collider != null)
         {
             if (hit.collider.gameObject.tag.Equals("building"))
@@ -304,12 +292,12 @@ public class aiMovement_scr : MonoBehaviour
     {
         test.SendMessage("modScore", 10);
 		playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
+        playerRef.GetComponent<Timer_scr>().SendMessage("modHP", -0.1f);
         gameObject.layer = 11;
         if (enemyAI)
             GameObject.FindGameObjectWithTag("ai_control").SendMessage("enemyAISpawn", -1);
         else
             GameObject.FindGameObjectWithTag("ai_control").SendMessage("aiSpawns", -1);
-        //Destroy (this.gameObject);
     }
 
 
@@ -320,6 +308,7 @@ public class aiMovement_scr : MonoBehaviour
 			playerRef.GetComponent<TransformAbilities_scr>().SendMessage("attackModify");
 			myRB.velocity = coll.GetComponent<movement_scr>().returnVelocity;
             alive = false;
+
         }
     }
 

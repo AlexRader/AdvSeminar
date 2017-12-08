@@ -25,7 +25,7 @@ public class cameraFollow_scr : MonoBehaviour
 	{
 		timer = MAXTIME;
 		player = GameObject.FindGameObjectWithTag("Player");
-		shakeAmount = 15f;
+		shakeAmount = 4f;
 	}
 
 	void FixedUpdate()
