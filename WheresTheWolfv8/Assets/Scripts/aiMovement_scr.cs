@@ -49,6 +49,7 @@ public class aiMovement_scr : MonoBehaviour
     private Component test;
 
     private const float MAXTIME = 1.0f;
+    private const float MAX_ATTACK_CHECK = .3f;
     private float curTime = 0;
 	private float moveCheck = 0;
     private float attackTime;
@@ -157,6 +158,7 @@ public class aiMovement_scr : MonoBehaviour
 			moveCheck -= Time.deltaTime;
             if (moveCheck <= 0)
             {
+                findEndpoint();
                 velocity = endPos - this.transform.position;
                 moveCheck = MAXTIME;
             }
@@ -165,12 +167,12 @@ public class aiMovement_scr : MonoBehaviour
                 if (this.transform.position.y - endPos.y < 1f && this.transform.position.y - endPos.y > -1f)
                 {
                     returnNow = false;
-                    setConfined(false);
+                    //setConfined(false);
                     moveTo();
                     velocity = endPos - this.transform.position;
                 }
             }
-						rayCastDetection();
+			rayCastDetection();
         }
         else if (run == true)
             runningScript();
@@ -215,16 +217,16 @@ public class aiMovement_scr : MonoBehaviour
             if (curTime <= 0)
             {
                 position = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
-                distance = position.magnitude;
-                if (distance <= 6.0f)
+                distance = position.sqrMagnitude;
+                if (distance <= 36.0f)
                 {
                     attacking = true;
                 }
-                if (distance > 6.0f && attacking == false)
+                if (distance > 36.0f && attacking == false)
                 {
                     velocity = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
                     velocity = velocity.normalized * maxSpeed;
-                    curTime = MAXTIME;
+                    curTime = MAX_ATTACK_CHECK;
                     anim.SetBool("aim", false);
                 }
                 else
@@ -236,7 +238,7 @@ public class aiMovement_scr : MonoBehaviour
         }
 
         Debug.DrawRay(this.transform.position, playerDirection, Color.red);
-        hit = Physics2D.Raycast(this.transform.position, playerDirection, (playerDirection.normalized.magnitude) * .5f, layerMaskTwo);
+        hit = Physics2D.Raycast(this.transform.position, playerDirection, (playerDirection.magnitude) , layerMaskTwo);
 
         if (playerRef.GetComponent<playerInteract_scr>().isActive == false)
         {
@@ -250,8 +252,7 @@ public class aiMovement_scr : MonoBehaviour
 
             returnNow = true;
             run = false;
-            setMoveable(false);
-            setConfined(false);
+            //setMoveable(false);
             findEndpoint();
             maxSpeed = storedSpeed;
             setArea(aiGenPath);
@@ -259,7 +260,7 @@ public class aiMovement_scr : MonoBehaviour
         }
 
         Debug.DrawRay(this.transform.position, positionPoint, Color.blue);
-        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude, layermask);
+        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude * Time.deltaTime * 3, layermask);
         if (hit.collider != null)
         {
             if (hit.collider.gameObject.tag.Equals("building"))
@@ -269,7 +270,7 @@ public class aiMovement_scr : MonoBehaviour
                 tempStore = temp.x;
                 temp.x = temp.y * -1.0f;
                 temp.y = tempStore;
-                velocity += temp * 2f;
+                velocity += temp; // * 2f;
                 velocity = velocity.normalized * maxSpeed;
             }
         }
@@ -282,7 +283,7 @@ public class aiMovement_scr : MonoBehaviour
         Vector2 positionPoint = myRB.velocity;
 
         Debug.DrawRay(this.transform.position, positionPoint, Color.blue);
-        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude, layermask);
+        hit = Physics2D.Raycast(this.transform.position, positionPoint, positionPoint.normalized.magnitude * Time.deltaTime * 3, layermask);
         if (hit.collider != null)
         {
             if (hit.collider.gameObject.tag.Equals("building"))
@@ -292,7 +293,7 @@ public class aiMovement_scr : MonoBehaviour
                 tempStore = temp.x;
                 temp.x = temp.y * -1.0f;
                 temp.y = tempStore;
-                velocity += temp * 1.5f;
+                velocity += temp; // * 1.5f;
                 velocity = velocity.normalized * maxSpeed;
             }
         }
@@ -301,9 +302,13 @@ public class aiMovement_scr : MonoBehaviour
 
     void death()
     {
-        test.SendMessage("modScore", 100);
+        test.SendMessage("modScore", 10);
 		playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
         gameObject.layer = 11;
+        if (enemyAI)
+            GameObject.FindGameObjectWithTag("ai_control").SendMessage("enemyAISpawn", -1);
+        else
+            GameObject.FindGameObjectWithTag("ai_control").SendMessage("aiSpawns", -1);
         //Destroy (this.gameObject);
     }
 
@@ -334,12 +339,6 @@ public class aiMovement_scr : MonoBehaviour
         anim.runtimeAnimatorController = var;
     }
 
-
-    // useless function
-    void setMyObject(GameObject var)
-    {
-        //myObject = var;
-    }
     void setEndPos(Vector3 var)
     {
         endPos = var;
@@ -350,10 +349,20 @@ public class aiMovement_scr : MonoBehaviour
         myArea = var;
     }
 
+    void setReturn()
+    {
+        returnNow = true;
+    }
+
     void getNextLocation()
     {
         if (confinedTo == true)
-            setEndPos(myArea[Random.Range(0, myArea.Length)].transform.position);
+        {
+            myLocation = myLocation - 1;
+            if (myLocation < 0)
+                myLocation = myArea.Length - 1;
+            setEndPos(myArea[myLocation].transform.position);
+        }
         else
         {
             myLocation = (myLocation + 1) % myArea.Length;
@@ -413,13 +422,11 @@ public class aiMovement_scr : MonoBehaviour
         int i = 0;
 
         comparePosition = aiGenPath[i].transform.position;
-        //comparePosition = comparePosition - gameObject.transform.position;
         tempPosition = comparePosition;
 
         for (i = 0;  i < numberOfItems; i++)
         {
             comparePosition = aiGenPath[i].transform.position;
-            //comparePosition = comparePosition - gameObject.transform.position;
             if ((comparePosition - gameObject.transform.position).magnitude <= (tempPosition - gameObject.transform.position).magnitude)
             {
                 tempPosition = comparePosition;

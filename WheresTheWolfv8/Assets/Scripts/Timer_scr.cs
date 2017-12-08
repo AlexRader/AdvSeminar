@@ -16,7 +16,13 @@ public class Timer_scr : MonoBehaviour
 		curTime = MAXTIME;
 		if (timers == null) 
 			timers = GameObject.FindGameObjectsWithTag("timer");
-	}
+        Debug.Log(timers.Length);
+        for (int i = 0; i < timers.Length; ++i)
+        {
+            Debug.Log(timers[i].name);
+        }
+
+    }
 	
 	// Update is called once per frame
 	void Update () 
@@ -64,5 +70,14 @@ public class Timer_scr : MonoBehaviour
 				timers [i].SendMessage ("modHP", 1.0f);
 		}
 	}
+
+    void modHP(float var)
+    {
+        for (int i = 0; i < timers.Length; ++i)
+        {
+            if (timers[i].name == "health")
+                timers[i].SendMessage("modHP", var);
+        }
+    }
 		
 }

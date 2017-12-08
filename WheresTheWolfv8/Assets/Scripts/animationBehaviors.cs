@@ -31,13 +31,17 @@ public class animationBehaviors : MonoBehaviour
 
     void animationChecks()
     {
-        if (rb.velocity.SqrMagnitude() != 0 && anim.GetBool("attacking") == false)
+        if (rb.velocity.SqrMagnitude() >= 3f || 
+            rb.velocity.SqrMagnitude() <= -3f && 
+            anim.GetBool("attacking") == false)
         {
-            anim.SetTrigger("movement");
+            anim.SetBool("velocity", true);
         }
-        else if (rb.velocity.SqrMagnitude() == 0 && anim.GetBool("attacking") == false)
+        else if (rb.velocity.SqrMagnitude() < 3f && 
+                 rb.velocity.SqrMagnitude() > -3f && 
+                 anim.GetBool("attacking") == false)
         {
-            anim.SetTrigger("idle");
+            anim.SetBool("velocity", false);
         }
     }
 

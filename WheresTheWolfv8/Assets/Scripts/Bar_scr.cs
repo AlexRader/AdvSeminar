@@ -33,6 +33,8 @@ public class Bar_scr : MonoBehaviour
 			this.SendMessage (myName);
 			amounts.x = 0f;
 		}
+        //if (amounts.x > amounts.y)
+         //   amounts.x = amounts.y;
 		content.fillAmount = Map(amounts.x, amounts.y);
 
 
@@ -41,8 +43,11 @@ public class Bar_scr : MonoBehaviour
 	private void HandleBarIcrease(Vector2 amounts)
 	{
 		content.fillAmount = Map(amounts.x, amounts.y);
-		if (amounts.x >= amounts.y)
-			this.SendMessage(myName);
+        if (amounts.x >= amounts.y)
+        {
+            amounts.x = amounts.y;
+            this.SendMessage(myName);
+        }
 	}
 
 	//rotate the light

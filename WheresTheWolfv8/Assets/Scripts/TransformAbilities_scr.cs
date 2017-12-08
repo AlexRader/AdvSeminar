@@ -15,10 +15,10 @@ public class TransformAbilities_scr : MonoBehaviour
 	public BiteState biteState;
 	private float biteTimer;
 
-	private float maxDash = .3f;
+	private float maxDash = .7f;
 	private float maxBite = 1.0f;
 
-	private float cooldownTimer = 5f;
+	private float cooldownTimer = 1f;
 
 	public Vector2 savedVelocity;
 
@@ -35,16 +35,20 @@ public class TransformAbilities_scr : MonoBehaviour
 	private bool bite = false;
 	private bool dash = false;
 
+    private Animator anim;
+
+    public bool checkDash = true;
+
 	public enum DashState 
 	{
-		Ready,
-		Dashing,
-		Cooldown
+		Ready = 0,
+		Dashing = 1,
+		Cooldown = 2
 	}
 	public enum BiteState
 	{
-		Ready,
-		Biting,
+		Ready = 0,
+		Biting = 1,
 	}
 
 	void Biting()
@@ -53,11 +57,10 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
 		case BiteState.Ready:
 			var isBiteKeyDown = Input.GetKeyDown (KeyCode.J);
-			if (isBiteKeyDown && !dash) 
+			if (isBiteKeyDown && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hack-n-Slash")) 
 			{
 				savedVelocity = rb.velocity;
 				attack = true;
-				bite = true;
 				rb.velocity = Vector2.zero;
 				biteState = BiteState.Biting;
 				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
@@ -69,7 +72,6 @@ public class TransformAbilities_scr : MonoBehaviour
 			if (biteTimer <= 0) 
 			{
 				attack = false;
-				bite = false;
 				biteTimer = maxBite;
 				rb.velocity = savedVelocity;
 				gameObject.GetComponent<CircleCollider2D>().radius = 3f;
@@ -86,12 +88,13 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
 		case DashState.Ready:
 			var isDashKeyDown = Input.GetKeyDown (KeyCode.K);
-			if(isDashKeyDown && !bite)
+            checkDash = true;
+			if(isDashKeyDown && !anim.GetCurrentAnimatorStateInfo(0).IsName("BasicAttack2"))
 			{
+                checkDash = false;
 				savedVelocity = rb.velocity;
 				attack = true;
-				dash = true;
-				rb.velocity =  new Vector2(rb.velocity.x * 3f, rb.velocity.y * 3f);
+				rb.velocity =  new Vector2(rb.velocity.x * 5f, rb.velocity.y * 5f);
 				dashState = DashState.Dashing;
                 SendMessage("dashingNow", attack);
 				gameObject.GetComponent<CircleCollider2D>().radius = 1f;
@@ -101,7 +104,6 @@ public class TransformAbilities_scr : MonoBehaviour
 			dashTimer -= Time.deltaTime;
 			if(dashTimer <= 0)
 			{
-				dash = false;
 				attack = false;
 				dashTimer = cooldownTimer;
 				rb.velocity = savedVelocity;
@@ -144,7 +146,8 @@ public class TransformAbilities_scr : MonoBehaviour
 		test = GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>();
 		playerRef = GameObject.FindGameObjectWithTag("Player");
 		cameraRef = GameObject.FindGameObjectWithTag("MainCamera");
-	}
+        anim = gameObject.GetComponent<Animator>();
+    }
 	
 	// Update is called once per frame
 	void Update () 
@@ -166,8 +169,11 @@ public class TransformAbilities_scr : MonoBehaviour
 	{
 		if (Input.GetKeyDown (KeyCode.L) && changeBack == true)
 		{
-			changeForm();
-			allowChange(true);
+            if (notAttacking())
+            {
+                changeForm();
+                allowChange(true);
+            }
 		}
 	}
 
@@ -176,27 +182,40 @@ public class TransformAbilities_scr : MonoBehaviour
 		changeBack = var;
 	}
 
-	void changeForm()
-	{
-		werewolfForm = !werewolfForm;
+    void changeForm()
+    {
+        werewolfForm = !werewolfForm;
 
-		if (werewolfForm == true)
-		{
-			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", 10f);
-			GetComponent<Timer_scr>().SendMessage("reset");
+        if (werewolfForm == true)
+        {
+            GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", 10f);
+            GetComponent<Timer_scr>().SendMessage("reset");
             SendMessage("changeVisual", werewolfForm);
+            checkDash = true;
         }
-		else
-		{
-			GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", -10f);
-			GetComponent<Timer_scr>().SendMessage("clear");
-			biteTimer = 0;
-			dashTimer = 0;
-			Dashing();
-			Biting();
+        else
+        {
+            GameObject.FindGameObjectWithTag("Player").SendMessage("changeMaxVel", -10f);
+            GetComponent<Timer_scr>().SendMessage("clear");
+            biteTimer = 0;
+            dashTimer = 0;
+            Dashing();
+            Biting();
             SendMessage("changeVisual", werewolfForm);
+            checkDash = false;
         }
-		GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>().SendMessage("setBool");
-		GameObject.FindGameObjectWithTag("Player").SendMessage("changeInteraction", werewolfForm);
-	}
+        GameObject.FindGameObjectWithTag("variables").GetComponent<savedVariables_scr>().SendMessage("setBool");
+        GameObject.FindGameObjectWithTag("Player").SendMessage("changeInteraction", werewolfForm);
+    }
+    
+    private bool notAttacking()
+    {
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Hack-n-Slash")
+            || anim.GetCurrentAnimatorStateInfo(0).IsName("BasicAttack2")
+            )
+            return false;
+        else
+            return true;
+    }
+
 }

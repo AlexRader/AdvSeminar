@@ -5,7 +5,8 @@ using UnityEngine;
 public class WerewolfTimer_scr : MonoBehaviour 
 {
 	private bool check = false;
-	private float curAmount;
+    private GameObject reference;
+    private float curAmount;
 	private float maxAmount;
 	private Vector2 vecAmount;
 	[SerializeField]
@@ -14,18 +15,25 @@ public class WerewolfTimer_scr : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		currStamina = 0.001f;
-		maxAmount = 10.0f;
+		currStamina = 0f;
+		maxAmount = 2.0f;
 		curAmount = maxAmount;
 		vecAmount = new Vector2(curAmount, maxAmount);
-	}
+        reference = GameObject.FindGameObjectWithTag("Player");
+    }
 
 	// unique timer variable for Werewolf time.
 	void incTime(float dt)
 	{
-		if (check != true) 
+		if (reference.GetComponent<TransformAbilities_scr>().werewolfForm == false) 
 		{
 			vecAmount.x -= dt;
+            if (vecAmount.x > 0.0f)
+            {
+                reference.GetComponent<Timer_scr>().SendMessage("modHP", -0.01f);
+            }
+            if (vecAmount.x < 0)
+                vecAmount.x = 0;
 			this.SendMessage ("HandleBar", vecAmount);
 		}
 		else
@@ -37,6 +45,8 @@ public class WerewolfTimer_scr : MonoBehaviour
 	void addTo(float dt)
 	{
 		vecAmount.x += dt;
+        if (vecAmount.x > vecAmount.y)
+            vecAmount.x = vecAmount.y;
 		this.SendMessage("HandleBarIcrease", vecAmount);
 	}
 
@@ -56,23 +66,16 @@ public class WerewolfTimer_scr : MonoBehaviour
 
 	void WerewolfTime ()
 	{
-		check = !check;
-		GameObject.FindGameObjectWithTag ("Player").SendMessage("changeForm");
+	    check = !check;
 	}
 		
 	void resetMe ()
 	{
-		curAmount = maxAmount;
-		vecAmount = new Vector2(curAmount, maxAmount);
-		this.SendMessage ("reset", vecAmount);
 		check = false;
 	}
 
 	void clearMe()
 	{
-		curAmount = 0.0f;
-		vecAmount = new Vector2(curAmount, maxAmount);
-		this.SendMessage("reset", vecAmount);
 		check = true;
 	}
 }

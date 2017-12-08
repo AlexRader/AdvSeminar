@@ -40,6 +40,6 @@ public class endLvl_scr : MonoBehaviour
 	void levelEnd()
 	{
 		//		Debug.Log("working");
-		GameObject.Find("ControlObject").SendMessage("levelChange");
+		//GameObject.Find("ControlObject").SendMessage("levelChange");
 	}
 }

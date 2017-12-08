@@ -6,12 +6,10 @@ using UnityEditor.Animations;
 
 public class aiControl_scr : MonoBehaviour {
 
-	public GameObject[] firstMarket;
-	public GameObject[] secondMarket;
-
-	public GameObject[] homeArea;
 	public GameObject[] patrolArea;
 	public GameObject[] staticPeople;
+
+    public GameObject[] aiSpawn;
 
     public AnimatorController[] allAnimation;
 
@@ -22,8 +20,22 @@ public class aiControl_scr : MonoBehaviour {
 
 	private int theCount = 0;
 
+    private int enemyCount = 0;
+    private int sacrificeCount = 0;
+    private const int MAX_ENEMIES = 25;
+    private const int MAX_SACRIFICES = 50;
+    private int currentEnemies = 10;
+    private int extraEnemies = 0;
 
-	public GameObject[] findObjects;
+    private float spawnTimer;
+    private const float MAX_SPAWN_TIMER = .8f;
+
+    bool switchDirection = false;
+
+    private GameObject scoreReference;
+
+
+    public GameObject[] findObjects;
 
 	private int[] standardSpawns;
 	private int numberOfItems;
@@ -53,17 +65,12 @@ public class aiControl_scr : MonoBehaviour {
 		Sunday = 3,
 	}
 
-
-
 	// Use this for initialization
 	void Start () 
 	{
 		dayState = (DayState)Random.Range (0, 5);
 		typeDay = (TypeDay)Random.Range (0, 4);
-		//maxCapacity = new List<int> ();
-		//locations = new List<List<GameObject>> ();
-//		Debug.Log(dayState);
-//		Debug.Log(typeDay);
+        spawnTimer = MAX_SPAWN_TIMER;
 
 		switch (dayState) 
 		{
@@ -104,10 +111,66 @@ public class aiControl_scr : MonoBehaviour {
 		{
 			standardSpawns [i] = Mathf.RoundToInt(standardSpawns [i] * multiplyFactor);
 		}
+        scoreReference = GameObject.FindGameObjectWithTag("variables");
 		setLists ();
 
 		spawnUnits ();
 	}
+
+    private void Update()
+    {
+        extraEnemies = savedVariables_scr.score / 100;
+        if (extraEnemies > MAX_ENEMIES)
+            extraEnemies = MAX_ENEMIES;
+        spawnTimer -= Time.deltaTime;
+        if (spawnTimer <= 0)
+        {
+            if (enemyCount < currentEnemies + extraEnemies)
+            {
+                int location = Random.Range(0, (aiSpawn.Length));
+                spawnPos = aiSpawn[location].transform.position;
+                newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
+                newObj.SendMessage("currentLocation", location);
+                newObj.SendMessage("setConfined", switchDirection);
+                newObj.SendMessage("setMoveable", false);
+                newObj.SendMessage("setArea", patrolArea);
+
+                newObj.name = "AI" + theCount;
+
+                newObj.SendMessage("switchEnemy", true);
+                newObj.SendMessage("setAnimator", allAnimation[5]);
+                newObj.SendMessage("setReturn");
+                enemyCount++;
+            }
+            if (sacrificeCount < MAX_SACRIFICES)
+            {
+                int location = Random.Range(0, (aiSpawn.Length));
+                spawnPos = aiSpawn[location].transform.position;
+                newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
+                newObj.SendMessage("currentLocation", location);
+                newObj.SendMessage("setConfined", switchDirection);
+                newObj.SendMessage("setMoveable", false);
+                newObj.SendMessage("setArea", patrolArea);
+
+                newObj.name = "AI" + theCount;
+
+                newObj.SendMessage("switchEnemy", false);
+                newObj.SendMessage("setAnimator", allAnimation[Random.Range(1, 5)]);
+                newObj.SendMessage("setReturn");
+                sacrificeCount++;
+            }
+        }
+        switchDirection = !switchDirection;
+    }
+
+    void enemyAISpawn(int var)
+    {
+        enemyCount--;
+    }
+    void aiSpawns(int var)
+    {
+        sacrificeCount--;
+    }
 
     void spawnInfo(Vector3 var, bool fooConfined, bool barConfined)
     {
@@ -123,92 +186,50 @@ public class aiControl_scr : MonoBehaviour {
 			for (int j = 0; j < standardSpawns [i]; j++) 
 			{
 				theCount++;
-				areaOfSpawn (i);
+				areaOfSpawn ();
 			}
 		}
 		
 		for (int i = 0; i < staticPeople.Length; i++)
 		{
 			spawnPos = staticPeople [i].transform.position;
-            spawnInfo(spawnPos, true, true);
+            spawnInfo(spawnPos, false, true);
             newObj.SendMessage("setAnimator", allAnimation[0]);
             newObj.SendMessage("setArea", staticPeople);
 		}
 	}
 
-	void areaOfSpawn(int var)
+	void areaOfSpawn()
 	{
 		randomSpawn = Random.Range(0, 10);
-		/*switch (var) 
-		{
-		case 0:
-			spawnPos = firstMarket [Random.Range (0, (firstMarket.Length))].transform.position;
-            spawnInfo(spawnPos, true, false);
-			newObj.SendMessage("setArea", firstMarket);
 
-			newObj.name = "AI" + theCount;
-			break;
-		case 1:
-			spawnPos = secondMarket [Random.Range (0, (secondMarket.Length))].transform.position;
-            spawnInfo(spawnPos, true, false);
-            newObj.SendMessage("setArea", secondMarket);
+        int location = Random.Range(0, (patrolArea.Length));
+		spawnPos = patrolArea[location].transform.position;
+		newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
+		newObj.SendMessage("currentLocation", location);
+		newObj.SendMessage("setConfined", switchDirection);
+		newObj.SendMessage("setMoveable", false);
+		newObj.SendMessage("setArea", patrolArea);
 
-			newObj.name = "AI" + theCount;
-			break;
-		case 2:
-			spawnPos = homeArea[Random.Range(0, (homeArea.Length))].transform.position;
-            spawnInfo(spawnPos, true, false);
-            newObj.SendMessage("setArea", homeArea);
+		newObj.name = "AI" + theCount;
 
-			newObj.name = "AI" + theCount;
-			break;
-		case 3:
-			int location = Random.Range(0, (patrolArea.Length));
-			spawnPos = patrolArea[location].transform.position;
-			newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
-			newObj.SendMessage("currentLocation", location);
-			newObj.SendMessage("setConfined", false);
-			newObj.SendMessage ("setMoveable", false);
-            newObj.SendMessage("setArea", patrolArea);
-
-
-			newObj.name = "AI" + theCount;
-			break;
-
-		}*/
-		switch (var)
-		{
-			case 0:
-				int location = Random.Range(0, (patrolArea.Length));
-				spawnPos = patrolArea[location].transform.position;
-				newObj = Instantiate(mySpawn, spawnPos, Quaternion.identity);
-				newObj.SendMessage("currentLocation", location);
-				newObj.SendMessage("setConfined", false);
-				newObj.SendMessage("setMoveable", false);
-				newObj.SendMessage("setArea", patrolArea);
-
-
-				newObj.name = "AI" + theCount;
-				break;
-		}
         if (randomSpawn >= 8)
         {
             newObj.SendMessage("switchEnemy", true);
             newObj.SendMessage("setAnimator", allAnimation[5]);
+            enemyCount++;
         }
         else
         {
             newObj.SendMessage("switchEnemy", false);
             newObj.SendMessage("setAnimator", allAnimation[Random.Range(1, 5)]);
+            sacrificeCount++;
         }
+        switchDirection = !switchDirection;
 	}
 
 	void setLists()
 	{
-		//firstMarket = GameObject.FindGameObjectsWithTag ("firstMarket");
-		//secondMarket = GameObject.FindGameObjectsWithTag ("secondMarket");
-		//homeArea = GameObject.FindGameObjectsWithTag("homeLocation");
-		//patrolArea = GameObject.FindGameObjectsWithTag ("walkPath");
 		numberOfItems = GameObject.FindGameObjectsWithTag ("walkPath").Length;
 		patrolArea = GameObject.FindGameObjectsWithTag ("walkPath");
 		for (int i = 0; i < numberOfItems; i++) 
@@ -216,6 +237,8 @@ public class aiControl_scr : MonoBehaviour {
 			patrolArea [i] = GameObject.Find ("walkPath_prefab" + i);
 		}
 		staticPeople = GameObject.FindGameObjectsWithTag ("notMoving");
+
+        aiSpawn = GameObject.FindGameObjectsWithTag("spawnPos");
 	}
 
 }
