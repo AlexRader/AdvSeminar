@@ -175,7 +175,6 @@ public class TransformAbilities_scr : MonoBehaviour
         if (selfieSpawned == true)
         {
             selfieRef.SendMessage("changePos", selfieSpawner);
-            Debug.Log(selfieRef.name);
         }
     }
 
@@ -252,7 +251,6 @@ public class TransformAbilities_scr : MonoBehaviour
     {
         selfieSpawned = true;
         selfieRef = GameObject.FindGameObjectWithTag("theSelfie");
-        Debug.Log(selfieRef.name);
     }
 
 }

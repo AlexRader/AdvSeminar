@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class Timer_scr : MonoBehaviour 
 {
 	private const float MAXTIME = 90;
@@ -9,7 +10,7 @@ public class Timer_scr : MonoBehaviour
 	private float deltaTime;
 	private GameObject[] timers;
 
-	public Text scoreText;
+    public TextMeshProUGUI scoreText;
 	// Use this for initialization
 	void Start () 
 	{
@@ -33,7 +34,7 @@ public class Timer_scr : MonoBehaviour
 	}
 	void changeScore(int var)
 	{
-		scoreText.text = "Score: " + var;
+        scoreText.text = "Score: " + var;
 	}
 
 	void reset()

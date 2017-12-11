@@ -3,77 +3,103 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 public class endScreenSelect_scr : MonoBehaviour {
 
-	//private Canvas menu;
-	[SerializeField]
-	private int currentButton;
-	[SerializeField]
-	private Button[] buttons;
+    [SerializeField]
+    private int currentButton;
+    [SerializeField]
+    private TextMeshProUGUI[] selectors;
 
-	public GameObject selectorItem;
+    public GameObject selectorItem;
+    public GameObject controls;
+    private GameObject toDestroy;
+    private GameObject storedVariables;
+    Vector3 wolfStart = new Vector3(-5.5f, -1f, 0.0f);
+    Vector3 wolfSecond = new Vector3(0.5f, -1f, 0.0f);
+    Vector3 wolfThird = new Vector3(6f, -1f, 0.0f);
 
-	private GameObject storedVariables;
+    private bool created = false;
 
-	Vector3 wolfStart = new Vector3(-4.25f, -.75f, 0.0f);
-	Vector3 wolfSecond = new Vector3(4.25f, -.75f, 0.0f);
-	// Use this for initialization
-	void Start () {
-		buttons = this.GetComponentsInChildren<Button>();
-		currentButton = 0;
+    // Use this for initialization
+    void Start()
+    {
+        selectors = GetComponentsInChildren<TextMeshProUGUI>();
+        currentButton = 0;
 
-		selectorItem.transform.position = wolfStart;
-	}
+        storedVariables = GameObject.FindGameObjectWithTag("variables");
 
-	// Update is called once per frame
-	void Update () 
-	{
-		if (Input.GetKeyDown( KeyCode.A) || (Input.GetKeyDown( KeyCode.LeftArrow)))
-			currentButton -= 1;
-		else if (Input.GetKeyDown( KeyCode.D) || (Input.GetKeyDown( KeyCode.RightArrow)))
-		{
-			currentButton += 1;
-		}
-		withinBounds();
-		buttons[currentButton].Select();
+        // = blah;
+        selectorItem.transform.position = wolfStart;
 
-		if (Input.GetKeyDown( KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-		{
-			selectCase();
-		}
+    }
 
-		if (currentButton == 0)
-		{
-			selectorItem.transform.position = wolfStart;
-		}
-		else
-		{
-			selectorItem.transform.position = wolfSecond;
-		}
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            currentButton -= 1;
+        else if (Input.GetKeyDown(KeyCode.D) || (Input.GetKeyDown(KeyCode.RightArrow)))
+        {
+            currentButton += 1;
+        }
+        withinBounds();
 
-	void withinBounds()
-	{
-		if (currentButton < 0)
-		{
-			currentButton = buttons.Length - 1;
-		}
-		if (currentButton >= buttons.Length)
-		{
-			currentButton = currentButton % buttons.Length;
-		}
-	}
-	void selectCase()
-	{
-		switch (currentButton)
-		{
-			case(0):
-				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 3);
-				break;
-			case(1):
-				Application.Quit();
-				break;
-		}
-	}
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        {
+            selectCase();
+        }
+        if (currentButton == 0)
+        {
+            selectorItem.transform.position = wolfStart;
+        }
+        else if (currentButton == 1)
+        {
+            selectorItem.transform.position = wolfSecond;
+        }
+        else
+            selectorItem.transform.position = wolfThird;
+    }
+
+    void withinBounds()
+    {
+        if (currentButton < 0)
+        {
+            currentButton = selectors.Length - 1;
+        }
+        if (currentButton >= selectors.Length)
+        {
+            currentButton = currentButton % selectors.Length;
+        }
+    }
+    void selectCase()
+    {
+        switch (currentButton)
+        {
+            case (0):
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                break;
+            case (1):
+                createControls();
+                break;
+            case (2):
+                Application.Quit();
+                break;
+        }
+    }
+    void createControls()
+    {
+        created = !created;
+
+        if (!created)
+        {
+            Destroy(toDestroy);
+        }
+        else
+        {
+            Instantiate(controls, new Vector3(0,-2.5f,0), Quaternion.identity);
+            toDestroy = GameObject.FindGameObjectWithTag("controls");
+        }
+
+    }
 }

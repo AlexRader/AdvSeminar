@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 public class optionSelection_scr : MonoBehaviour 
 {
 	//private Canvas menu;
 	[SerializeField]
 	private int currentButton;
-	[SerializeField]
-	private Button[] buttons;
+    [SerializeField]
+    private TextMeshProUGUI[] selectors;
 
     public GameObject selectorItem;
 	public GameObject controls;
@@ -24,8 +24,7 @@ public class optionSelection_scr : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-		//menu = GameObject.Find("CanvasLookup").GetComponent<Canvas>();
-		buttons = this.GetComponentsInChildren<Button>();
+        selectors = GetComponentsInChildren<TextMeshProUGUI>();
 		currentButton = 0;
 
 		storedVariables = GameObject.FindGameObjectWithTag("variables");
@@ -47,7 +46,6 @@ public class optionSelection_scr : MonoBehaviour
 			currentButton += 1;
 		}
 		withinBounds();
-		buttons[currentButton].Select();
 
 		if (Input.GetKeyDown( KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
 		{
@@ -69,11 +67,11 @@ public class optionSelection_scr : MonoBehaviour
 	{
 		if (currentButton < 0)
 		{
-			currentButton = buttons.Length - 1;
+			currentButton = selectors.Length - 1;
 		}
-		if (currentButton >= buttons.Length)
+		if (currentButton >= selectors.Length)
 		{
-			currentButton = currentButton % buttons.Length;
+			currentButton = currentButton % selectors.Length;
 		}
 	}
 	void selectCase()

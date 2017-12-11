@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class displayScore_scr : MonoBehaviour {
 
-	public Text scoreText;
+    public TextMeshProUGUI scoreText;
 	// Use this for initialization
 	void Start () {
 		display();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
 	void display()
