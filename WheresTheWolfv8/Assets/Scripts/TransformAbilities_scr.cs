@@ -37,6 +37,13 @@ public class TransformAbilities_scr : MonoBehaviour
 
     public GameObject dashParticles;
 
+    private Vector3 selfieSpawner;
+
+    public GameObject selfieCollider;
+
+    private GameObject selfieRef;
+    private bool selfieSpawned = false;
+
     public enum DashState 
 	{
 		Ready = 0,
@@ -156,11 +163,25 @@ public class TransformAbilities_scr : MonoBehaviour
 		rb = GetComponent<Rigidbody2D> ();
 		cameraRef = GameObject.FindGameObjectWithTag("MainCamera");
         anim = gameObject.GetComponent<Animator>();
+        selfieSpawner = new Vector3(gameObject.transform.position.x - 3, gameObject.transform.position.y, gameObject.transform.position.z);
+    }
+
+    void Update()
+    {
+        if (gameObject.GetComponent<SpriteRenderer>().flipX == false)
+            selfieSpawner = new Vector3(gameObject.transform.position.x - 3, gameObject.transform.position.y, gameObject.transform.position.z);
+        else
+            selfieSpawner = new Vector3(gameObject.transform.position.x + 3, gameObject.transform.position.y, gameObject.transform.position.z);
+        if (selfieSpawned == true)
+        {
+            selfieRef.SendMessage("changePos", selfieSpawner);
+            Debug.Log(selfieRef.name);
+        }
     }
 
     void werewolfInputs()
     {
-        if (werewolfForm == true)
+        if (werewolfForm == true && !anim.GetCurrentAnimatorStateInfo(0).IsName("Transition"))
         {
             Dashing();
             Biting();
@@ -174,6 +195,7 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
             if (notAttacking())
             {
+                Instantiate(selfieCollider, selfieSpawner, Quaternion.identity);
                 changeForm();
                 allowChange(true);
             }
@@ -219,6 +241,18 @@ public class TransformAbilities_scr : MonoBehaviour
             return false;
         else
             return true;
+    }
+
+    void despawned()
+    {
+        selfieSpawned = false;
+        selfieRef = null;
+    }
+    void spawned()
+    {
+        selfieSpawned = true;
+        selfieRef = GameObject.FindGameObjectWithTag("theSelfie");
+        Debug.Log(selfieRef.name);
     }
 
 }

@@ -64,6 +64,14 @@ public class aiMovement_scr : MonoBehaviour
     private bool times = false;
     private const float MAX_DEATH = 20.0f;
     private float deathTimer = 0;
+
+    private const float startHpGain = -.05f;
+    private float currentHPGain;
+
+    private const int startScoreVal = 10;
+    private int currentScoreVal;
+
+
     void Start()
     {
         myRB = GetComponent<Rigidbody2D>();
@@ -85,6 +93,9 @@ public class aiMovement_scr : MonoBehaviour
 
         anim = gameObject.GetComponent<Animator>();
         deathTimer = MAX_DEATH;
+
+        currentHPGain = startHpGain;
+        currentScoreVal = startScoreVal;
     }
 
     void spriteDirection()
@@ -217,14 +228,18 @@ public class aiMovement_scr : MonoBehaviour
         }
         else
         {
+            hit = Physics2D.Raycast(this.transform.position, playerDirection, (playerDirection.magnitude) * .6f, layerMaskTwo);
             anim.SetTrigger("running");
             if (curTime <= 0)
             {
                 position = playerRef.GetComponent<Rigidbody2D>().transform.position - this.transform.position;
                 distance = position.sqrMagnitude;
-                if (distance <= 42.0f)
+                if (hit.collider != null)
                 {
-                    attacking = true;
+                    if (distance <= 42.0f || hit.collider.gameObject.tag.Equals("Player"))
+                    {
+                        attacking = true;
+                    }
                 }
                 if (distance > 42.0f && attacking == false)
                 {
@@ -290,9 +305,9 @@ public class aiMovement_scr : MonoBehaviour
 
     void death()
     {
-        test.SendMessage("modScore", 10);
+        test.SendMessage("modScore", currentScoreVal);
 		playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
-        playerRef.GetComponent<Timer_scr>().SendMessage("modHP", -0.1f);
+        playerRef.GetComponent<Timer_scr>().SendMessage("modHP", currentHPGain);
         gameObject.layer = 11;
         if (enemyAI)
             GameObject.FindGameObjectWithTag("ai_control").SendMessage("enemyAISpawn", -1);
@@ -425,5 +440,14 @@ public class aiMovement_scr : MonoBehaviour
         
         myArea = aiGenPath;
         endPos = tempPosition;
+    }
+
+    void SelfieTaken(float var)
+    {
+        if (currentHPGain == startHpGain)
+        {
+            currentHPGain += var;
+            currentScoreVal += currentScoreVal;
+        }
     }
 }
