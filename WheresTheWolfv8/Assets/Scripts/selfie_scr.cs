@@ -23,7 +23,7 @@ public class selfie_scr : MonoBehaviour {
     {
         if (coll.tag == "npc")
         {
-            coll.SendMessage("SelfieTaken", -.2f);
+            coll.SendMessage("SelfieTaken", -.3f);
         }
     }
 

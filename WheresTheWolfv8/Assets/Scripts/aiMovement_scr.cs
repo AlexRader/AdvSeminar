@@ -65,15 +65,26 @@ public class aiMovement_scr : MonoBehaviour
     private const float MAX_DEATH = 20.0f;
     private float deathTimer = 0;
 
-    private const float startHpGain = -.05f;
+    private const float startHpGain = -.1f;
     private float currentHPGain;
 
     private const int startScoreVal = 10;
     private int currentScoreVal;
+    //oh this is so bad
+    public AudioClip deathSound;
+    public AudioClip gunCock;
+    public AudioClip gunFire;
+    public AudioClip gunBulletDrop;
+    public AudioClip scream1;
+    public AudioClip scream2;
+    public AudioSource mySource;
 
+    //mySource.clip = audioClip
+    //mysource.Play();
 
     void Start()
     {
+        mySource = GetComponent<AudioSource>();
         myRB = GetComponent<Rigidbody2D>();
         endPos = this.transform.position;
         Physics2D.IgnoreLayerCollision(8, 0, true);
@@ -139,6 +150,8 @@ public class aiMovement_scr : MonoBehaviour
         {
             if (!times)
             {
+                mySource.clip = deathSound;
+                mySource.Play();
                 Instantiate(deathParticles, gameObject.transform.position, gameObject.transform.rotation);
                 times = true;
             }
@@ -236,10 +249,10 @@ public class aiMovement_scr : MonoBehaviour
                 distance = position.sqrMagnitude;
                 if (hit.collider != null)
                 {
-                    if (distance <= 42.0f || hit.collider.gameObject.tag.Equals("Player"))
-                    {
+                    if (distance <= 42.0f && hit.collider.gameObject.tag.Equals("Player"))
                         attacking = true;
-                    }
+                    if (hit.collider.gameObject.tag.Equals("Player"))
+                        attacking = true;
                 }
                 if (distance > 42.0f && attacking == false)
                 {
@@ -305,6 +318,7 @@ public class aiMovement_scr : MonoBehaviour
 
     void death()
     {
+        BroadcastMessage("setActive", false);
         test.SendMessage("modScore", currentScoreVal);
 		playerRef.GetComponent<TransformAbilities_scr>().SendMessage("allowChange", true);
         playerRef.GetComponent<Timer_scr>().SendMessage("modHP", currentHPGain);
@@ -323,7 +337,6 @@ public class aiMovement_scr : MonoBehaviour
 			playerRef.GetComponent<TransformAbilities_scr>().SendMessage("attackModify");
 			myRB.velocity = coll.GetComponent<movement_scr>().returnVelocity;
             alive = false;
-
         }
     }
 
@@ -392,7 +405,14 @@ public class aiMovement_scr : MonoBehaviour
                 maxSpeed = 10;
             }
             else
+            {
+                if (Random.Range(0, 2) == 0)
+                    mySource.clip = scream1;
+                else
+                    mySource.clip = scream2;
+                mySource.Play();
                 anim.SetBool("run", true);
+            }
         }
     }
 
@@ -415,6 +435,8 @@ public class aiMovement_scr : MonoBehaviour
         if (attackTime <= 0)
         {
             anim.SetBool("shoot", true);
+            mySource.clip = gunFire;
+            mySource.Play();
             attackTime = MAXTIME;
             Instantiate(shot, gameObject.transform.position, Quaternion.identity);
         }
@@ -444,10 +466,14 @@ public class aiMovement_scr : MonoBehaviour
 
     void SelfieTaken(float var)
     {
-        if (currentHPGain == startHpGain)
+        if (alive)
         {
-            currentHPGain += var;
-            currentScoreVal += currentScoreVal;
+            if (currentHPGain == startHpGain)
+            {
+                currentHPGain += var;
+                currentScoreVal += currentScoreVal;
+                BroadcastMessage("setActive", true);
+            }
         }
     }
 }

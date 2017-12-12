@@ -16,7 +16,7 @@ public class TransformAbilities_scr : MonoBehaviour
 	private float biteTimer;
 
 	private float maxDash = .7f;
-	private float maxBite = 1.0f;
+	private float maxBite = .5f;
 
 	private float cooldownTimer = 3f;
 
@@ -44,6 +44,11 @@ public class TransformAbilities_scr : MonoBehaviour
     private GameObject selfieRef;
     private bool selfieSpawned = false;
 
+    public AudioClip cameraSound;
+    public AudioClip biteSound;
+    public AudioClip dashSound;
+    public AudioSource mySource;
+
     public enum DashState 
 	{
 		Ready = 0,
@@ -65,7 +70,9 @@ public class TransformAbilities_scr : MonoBehaviour
 			var isBiteKeyDown = Input.GetKeyDown (KeyCode.J);
 			if (isBiteKeyDown && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hack-n-Slash")) 
 			{
-				savedVelocity = rb.velocity;
+                mySource.clip = biteSound;
+                mySource.Play();
+                savedVelocity = rb.velocity;
 				attack = true;
 				rb.velocity = Vector2.zero;
 				biteState = BiteState.Biting;
@@ -108,6 +115,8 @@ public class TransformAbilities_scr : MonoBehaviour
             checkDash = true;
 			if(isDashKeyDown && !anim.GetCurrentAnimatorStateInfo(0).IsName("BasicAttack2"))
 			{
+                mySource.clip = dashSound;
+                mySource.Play();
                 Instantiate(dashParticles, gameObject.transform.position, gameObject.transform.rotation);
                 checkDash = false;
 				savedVelocity = rb.velocity;
@@ -157,7 +166,8 @@ public class TransformAbilities_scr : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
-		werewolfForm = false;
+        mySource = GetComponent<AudioSource>();
+        werewolfForm = false;
 		changeForm();
 		dashTimer = maxDash;
 		rb = GetComponent<Rigidbody2D> ();
@@ -194,6 +204,8 @@ public class TransformAbilities_scr : MonoBehaviour
 		{
             if (notAttacking())
             {
+                mySource.clip = cameraSound;
+                mySource.Play();
                 Instantiate(selfieCollider, selfieSpawner, Quaternion.identity);
                 changeForm();
                 allowChange(true);

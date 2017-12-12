@@ -20,10 +20,15 @@ public class optionSelection_scr : MonoBehaviour
     Vector3 wolfSecond = new Vector3(0.5f, -1f, 0.0f);
 	Vector3 wolfThird = new Vector3(6f, -1f, 0.0f);
 
-	private bool created = false;
+    public AudioClip choiceSound;
+    public AudioClip selectSound;
+    public AudioSource mySource;
+
+    private bool created = false;
 
 	// Use this for initialization
 	void Start () {
+        mySource = GetComponent<AudioSource>();
         selectors = GetComponentsInChildren<TextMeshProUGUI>();
 		currentButton = 0;
 
@@ -39,16 +44,24 @@ public class optionSelection_scr : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		if (Input.GetKeyDown( KeyCode.A) || Input.GetKeyDown( KeyCode.LeftArrow))
-			currentButton -= 1;
-		else if (Input.GetKeyDown( KeyCode.D) || (Input.GetKeyDown( KeyCode.RightArrow)))
-		{
-			currentButton += 1;
-		}
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            currentButton -= 1;
+            mySource.clip = choiceSound;
+            mySource.Play();
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || (Input.GetKeyDown(KeyCode.RightArrow)))
+        {
+            currentButton += 1;
+            mySource.clip = choiceSound;
+            mySource.Play();
+        }
 		withinBounds();
 
 		if (Input.GetKeyDown( KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
 		{
+            mySource.clip = selectSound;
+            mySource.Play();
 			selectCase();
 		}
         if (currentButton == 0)
@@ -99,7 +112,7 @@ public class optionSelection_scr : MonoBehaviour
 		}
 		else
 		{
-			Instantiate(controls);
+			Instantiate(controls, new Vector3(0f, -3f, 2f), Quaternion.identity);
 			toDestroy = GameObject.FindGameObjectWithTag("controls");
 		}
 

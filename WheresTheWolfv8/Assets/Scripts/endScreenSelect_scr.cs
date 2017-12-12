@@ -21,9 +21,14 @@ public class endScreenSelect_scr : MonoBehaviour {
 
     private bool created = false;
 
+    public AudioClip choiceSound;
+    public AudioClip selectSound;
+    public AudioSource mySource;
+
     // Use this for initialization
     void Start()
     {
+        mySource = GetComponent<AudioSource>();
         selectors = GetComponentsInChildren<TextMeshProUGUI>();
         currentButton = 0;
 
@@ -38,15 +43,23 @@ public class endScreenSelect_scr : MonoBehaviour {
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
             currentButton -= 1;
+            mySource.clip = choiceSound;
+            mySource.Play();
+        }
         else if (Input.GetKeyDown(KeyCode.D) || (Input.GetKeyDown(KeyCode.RightArrow)))
         {
             currentButton += 1;
+            mySource.clip = choiceSound;
+            mySource.Play();
         }
         withinBounds();
 
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
+            mySource.clip = selectSound;
+            mySource.Play();
             selectCase();
         }
         if (currentButton == 0)
@@ -77,7 +90,7 @@ public class endScreenSelect_scr : MonoBehaviour {
         switch (currentButton)
         {
             case (0):
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 2);
                 break;
             case (1):
                 createControls();

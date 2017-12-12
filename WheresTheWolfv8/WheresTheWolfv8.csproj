@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\animationBehaviors.cs" />
     <Compile Include="Assets\Scripts\arrow_scr.cs" />
     <Compile Include="Assets\Scripts\Bar_scr.cs" />
+    <Compile Include="Assets\Scripts\BonusMarker_scr.cs" />
     <Compile Include="Assets\Scripts\cameraFollow_scr.cs" />
     <Compile Include="Assets\Scripts\colorLerp_scr.cs" />
     <Compile Include="Assets\Scripts\dashRender_scr.cs" />
